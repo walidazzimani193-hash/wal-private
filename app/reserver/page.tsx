@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   prestationsV1,
   grades,
@@ -47,6 +47,24 @@ export default function ReserverPage() {
   const indicatifFinal = indicatif === "autre" ? indicatifAutre.trim() : indicatif;
   const whatsappComplet = `${indicatifFinal} ${whatsapp.trim()}`.trim();
   const [statut, setStatut] = useState<"idle" | "envoi" | "ok" | "erreur">("idle");
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Si le client est connecté : on rattache la réservation et on pré-remplit ses infos
+  useEffect(() => {
+    const supabase = getSupabase();
+    if (!supabase) return;
+    supabase.auth.getSession().then(async ({ data }) => {
+      const uid = data.session?.user.id ?? null;
+      setUserId(uid);
+      if (!uid) return;
+      const { data: p } = await supabase.from("clients").select("prenom,telephone,zone").eq("id", uid).maybeSingle();
+      if (p) {
+        if (p.prenom) setPrenom(p.prenom);
+        if (p.telephone) setWhatsapp(p.telephone);
+        if (p.zone) setZone(p.zone);
+      }
+    });
+  }, []);
 
   const prestation = prestationsV1.find((p) => p.id === prestationId) ?? null;
   const grade = grades.find((g) => g.id === gradeId)!;
@@ -89,6 +107,7 @@ export default function ReserverPage() {
         zone,
         quand: quandTexte,
         notes: notes.trim() || null,
+        client_id: userId,
       });
       setStatut(error ? "erreur" : "ok");
       return;
@@ -152,7 +171,14 @@ export default function ReserverPage() {
             Votre coiffeur, <em style={{ fontStyle: "italic", color: "#C4A882" }}>chez vous.</em>
           </h1>
           <p className="text-white/50 text-sm mt-6 max-w-xl leading-relaxed">
-            Sans création de compte. Confirmation sur WhatsApp en moins de 2 h — 30 minutes en Last Minute.
+            Confirmation en moins de 2 h — 30 minutes en Last Minute.
+          </p>
+          <p className="text-white/40 text-sm mt-3">
+            {userId ? (
+              <>Connecté ✓ — suivez vos demandes dans <a href="/compte" className="text-[#C4A882] underline underline-offset-4">votre espace</a>.</>
+            ) : (
+              <><a href="/compte" className="text-[#C4A882] underline underline-offset-4">Connectez-vous</a> pour suivre vos demandes et garder votre historique. Sinon, réservez directement ci-dessous.</>
+            )}
           </p>
         </div>
       </section>

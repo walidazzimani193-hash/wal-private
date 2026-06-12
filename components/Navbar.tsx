@@ -70,11 +70,18 @@ export default function Navbar() {
         {/* CTA desktop */}
         <div className="hidden md:flex items-center gap-4">
           <Link
-            href="/pro"
+            href="/compte"
             className="text-white/60 hover:text-white text-xs tracking-widest transition-colors duration-200"
             style={{ letterSpacing: "0.12em" }}
           >
-            CONNEXION
+            MON COMPTE
+          </Link>
+          <Link
+            href="/pro"
+            className="text-white/40 hover:text-white text-xs tracking-widest transition-colors duration-200"
+            style={{ letterSpacing: "0.12em" }}
+          >
+            PRO
           </Link>
           <Link
             href="/coiffeurs"
@@ -165,11 +172,18 @@ export default function Navbar() {
                 REJOINDRE
               </Link>
               <Link
-                href="/pro"
+                href="/compte"
                 className="block text-center text-white/60 hover:text-white px-5 py-3 text-xs tracking-widest transition-colors duration-200 mt-1"
                 onClick={() => setMenuOpen(false)}
               >
-                CONNEXION COIFFEUR
+                MON COMPTE
+              </Link>
+              <Link
+                href="/pro"
+                className="block text-center text-white/40 hover:text-white px-5 py-3 text-xs tracking-widest transition-colors duration-200"
+                onClick={() => setMenuOpen(false)}
+              >
+                ESPACE COIFFEUR
               </Link>
             </motion.div>
           </motion.div>
