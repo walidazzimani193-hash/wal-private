@@ -28,6 +28,7 @@ type Reservation = {
   notes: string | null;
   statut: string;
   coiffeur_id: string | null;
+  client_id: string | null;
 };
 
 const gradeLabel = (id: string) => grades.find((g) => g.id === id)?.label ?? id;
@@ -296,7 +297,9 @@ export default function ProPage() {
                   <p className="text-white/40 text-xs mb-1">
                     {r.client_prenom} · {r.zone} · {r.quand === "last_minute" ? "Last Minute" : r.quand}
                   </p>
-                  <p className="text-white/40 text-xs mb-4">WhatsApp : {r.client_whatsapp}</p>
+                  {!r.client_id && (
+                    <p className="text-white/40 text-xs mb-4">WhatsApp : {r.client_whatsapp}</p>
+                  )}
                   {r.notes && <p className="text-white/40 text-xs italic mb-4">« {r.notes} »</p>}
                   <button
                     onClick={() => terminer(r.id)}
@@ -304,7 +307,7 @@ export default function ProPage() {
                   >
                     MARQUER TERMINÉ
                   </button>
-                  {supabase && (
+                  {supabase && r.client_id ? (
                     <Chat
                       supabase={supabase}
                       reservationId={r.id}
@@ -313,6 +316,10 @@ export default function ProPage() {
                       peutEcrire
                       interlocuteur={r.client_prenom}
                     />
+                  ) : (
+                    <p className="text-white/30 text-xs mt-3">
+                      Réservation invité — contact via WhatsApp ci-dessus.
+                    </p>
                   )}
                 </div>
               ))}
