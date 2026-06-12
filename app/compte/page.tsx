@@ -208,12 +208,12 @@ export default function ComptePage() {
               </p>
               <input
                 inputMode="numeric"
-                maxLength={6}
-                placeholder="Code à 6 chiffres"
+                maxLength={8}
+                placeholder="Code reçu par email"
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                 onKeyDown={(e) => e.key === "Enter" && verifierCode()}
-                className={`${inputDark} w-full text-center tracking-[0.5em]`}
+                className={`${inputDark} w-full text-center tracking-[0.3em]`}
               />
               <button
                 onClick={verifierCode}
