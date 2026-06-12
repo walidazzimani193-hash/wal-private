@@ -76,6 +76,13 @@ export default function Navbar() {
           >
             REJOINDRE
           </Link>
+          <Link
+            href="/reserver"
+            className="bg-[#C4A882] text-[#0A0A0A] hover:bg-white px-5 py-2.5 text-xs tracking-widest transition-all duration-300"
+            style={{ letterSpacing: "0.15em" }}
+          >
+            RÉSERVER
+          </Link>
         </div>
 
         {/* Burger mobile */}
@@ -136,6 +143,13 @@ export default function Navbar() {
               transition={{ delay: 0.25, duration: 0.35 }}
               className="mt-4"
             >
+              <Link
+                href="/reserver"
+                className="block text-center bg-[#C4A882] text-[#0A0A0A] hover:bg-white px-5 py-3 text-xs tracking-widest transition-all duration-300 mb-3"
+                onClick={() => setMenuOpen(false)}
+              >
+                RÉSERVER
+              </Link>
               <Link
                 href="/coiffeurs"
                 className="block text-center text-white border border-[#C4A882] hover:bg-[#C4A882] hover:text-[#0A0A0A] px-5 py-3 text-xs tracking-widest transition-all duration-300"

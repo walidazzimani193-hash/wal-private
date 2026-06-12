@@ -34,7 +34,7 @@ export function FadeIn({
       className={className}
       initial={{ opacity: 0, ...offsets[direction] }}
       animate={isInView ? { opacity: 1, y: 0, x: 0 } : {}}
-      transition={{ duration, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ duration, delay, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }}
     >
       {children}
     </motion.div>
