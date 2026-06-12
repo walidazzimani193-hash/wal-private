@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabase, supabaseConfigured } from "@/lib/supabase";
 import { grades } from "@/lib/catalogue";
+import Chat from "@/components/Chat";
 
 type Coiffeur = {
   id: string;
@@ -303,6 +304,16 @@ export default function ProPage() {
                   >
                     MARQUER TERMINÉ
                   </button>
+                  {supabase && (
+                    <Chat
+                      supabase={supabase}
+                      reservationId={r.id}
+                      userId={coiffeur.id}
+                      role="coiffeur"
+                      peutEcrire
+                      interlocuteur={r.client_prenom}
+                    />
+                  )}
                 </div>
               ))}
             </div>

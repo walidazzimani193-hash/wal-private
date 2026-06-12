@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabase, supabaseConfigured } from "@/lib/supabase";
 import { zones } from "@/lib/catalogue";
+import Chat from "@/components/Chat";
 
 type ClientProfil = { prenom: string | null; telephone: string | null; adresse: string | null; zone: string | null };
 type Reservation = {
@@ -15,7 +16,13 @@ type Reservation = {
   statut: string;
   coiffeur_prenom: string | null;
   created_at: string;
+  terminee_at: string | null;
 };
+
+// Écriture autorisée : acceptée, ou terminée depuis moins de 24 h
+const peutEcrire = (r: Reservation) =>
+  r.statut === "acceptee" ||
+  (r.statut === "terminee" && !!r.terminee_at && Date.now() - new Date(r.terminee_at).getTime() < 24 * 3600 * 1000);
 
 const statutLabel: Record<string, { txt: string; color: string }> = {
   en_attente: { txt: "En attente d'un coiffeur", color: "#C4A882" },
@@ -48,7 +55,7 @@ export default function ComptePage() {
         supabase.from("clients").select("prenom,telephone,adresse,zone").eq("id", uid).maybeSingle(),
         supabase
           .from("reservations")
-          .select("id,prestation_label,prix,zone,quand,statut,coiffeur_prenom,created_at")
+          .select("id,prestation_label,prix,zone,quand,statut,coiffeur_prenom,created_at,terminee_at")
           .eq("client_id", uid)
           .order("created_at", { ascending: false }),
       ]);
@@ -304,6 +311,16 @@ export default function ComptePage() {
                     {statutLabel[r.statut].txt}
                     {r.statut === "acceptee" && r.coiffeur_prenom ? ` · ${r.coiffeur_prenom}` : ""}
                   </span>
+                  {supabase && userId && r.statut === "acceptee" && (
+                    <Chat
+                      supabase={supabase}
+                      reservationId={r.id}
+                      userId={userId}
+                      role="client"
+                      peutEcrire={peutEcrire(r)}
+                      interlocuteur={r.coiffeur_prenom ?? "votre coiffeur"}
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -316,11 +333,23 @@ export default function ComptePage() {
             <p className="text-white/40 text-xs tracking-[0.2em] mb-4">HISTORIQUE</p>
             <div className="flex flex-col gap-2">
               {historique.map((r) => (
-                <div key={r.id} className="flex items-center justify-between bg-white/[0.03] border border-white/10 px-5 py-3">
-                  <span className="text-white/70 text-sm">{r.prestation_label}</span>
-                  <span className="text-white/40 text-xs">
-                    {r.created_at.split("T")[0]} · {statutLabel[r.statut].txt}
-                  </span>
+                <div key={r.id} className="bg-white/[0.03] border border-white/10 px-5 py-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/70 text-sm">{r.prestation_label}</span>
+                    <span className="text-white/40 text-xs">
+                      {r.created_at.split("T")[0]} · {statutLabel[r.statut].txt}
+                    </span>
+                  </div>
+                  {supabase && userId && r.statut === "terminee" && (
+                    <Chat
+                      supabase={supabase}
+                      reservationId={r.id}
+                      userId={userId}
+                      role="client"
+                      peutEcrire={peutEcrire(r)}
+                      interlocuteur={r.coiffeur_prenom ?? "votre coiffeur"}
+                    />
+                  )}
                 </div>
               ))}
             </div>
