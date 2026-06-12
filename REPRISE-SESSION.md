@@ -1,6 +1,6 @@
 # WAL Private — État du projet & point de reprise
 
-**Dernière mise à jour** : 12 juin 2026
+**Dernière mise à jour** : 12 juin 2026 (nuit — SMTP Gmail + code connexion)
 **Live** : https://wal-private.vercel.app · **Repo** : github.com/walidazzimani193-hash/wal-private (privé)
 **Stack** : Next.js 16 + React 19 + Tailwind 4 + framer-motion + **Supabase** (auth, DB, realtime)
 
@@ -24,7 +24,8 @@ Plateforme marketplace de **coiffeurs à domicile à Marrakech** (repositionné 
 | Site vitrine | ✅ live | home, /clients, /coiffeurs, /a-propos, /contact |
 | **/reserver** (client) | ✅ live | services SANS produit uniquement (brushing, coupes, barbe, chignon) ; prix calculé en direct ; indicatif WhatsApp international ; envoi → Supabase |
 | **/pro** (coiffeur) | ✅ live + testé | login email/mdp, bouton En ligne, demandes de sa zone en temps réel, Accepter (premier qui accepte), Terminé |
-| **/compte** (client) | ✅ live + testé | connexion par LIEN MAGIQUE email, demandes en cours, historique, profil (adresse/zone) ; bouton Google présent mais PAS encore actif |
+| **/compte** (client) | ✅ live + testé | connexion par LIEN MAGIQUE email **ET Google 1-clic (actif ✅)**, demandes en cours, historique, profil (adresse/zone) |
+| **Google OAuth** | ✅ live + testé | bouton « Continuer avec Google » fonctionnel ; app Google publiée « En production » ; user de test créé via Google |
 | Base Supabase | ✅ | tables `coiffeurs`, `reservations`, `clients` ; RLS ; RPC `accepter_reservation` atomique ; realtime |
 | Déploiement | ✅ | Vercel auto-deploy sur push `main` ; env vars `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` en place |
 
@@ -47,12 +48,22 @@ Plateforme marketplace de **coiffeurs à domicile à Marrakech** (repositionné 
 
 ## 6. Ce qui RESTE à faire (priorités)
 
-1. **Google OAuth 1-clic** — bouton déjà codé sur /compte, à activer (Google Cloud Console → OAuth client → coller Client ID/Secret dans Supabase → Providers → Google).
-2. **SMTP custom** (Gmail ou Resend) — pour repasser au code 6 chiffres + fiabilité des emails en prod.
-3. **Messagerie interne client↔coiffeur** — demandée par Salim. But : garder la main sur la liaison, masquer automatiquement les numéros de téléphone (anti-contournement). Via Supabase Realtime (table `messages` par réservation). Non commencée.
+1. ~~**Google OAuth 1-clic**~~ ✅ **FAIT 12/06** (voir détails ci-dessous, section 8).
+2. ~~**SMTP custom**~~ ✅ **FAIT 12/06** (Gmail en dépannage). SMTP Gmail (`smtp.gmail.com:465`, compte `walidazzimani193@gmail.com` + mot de passe d'application) branché dans Supabase → emails fiables. Template « Magic Link » enrichi de `{{ .Token }}` → l'email contient **lien + code à 8 chiffres**, et `/compte` propose les deux au choix (`signInWithOtp` + `verifyOtp`). ⚠️ codes OTP = **8 chiffres** ici. **Resend + domaine custom = à faire « semaine prochaine »** (Salim prend le domaine plus tard ; Resend exige un domaine vérifié).
+3. **Messagerie interne client↔coiffeur** — demandée par Salim. But : garder la main sur la liaison, masquer automatiquement les numéros de téléphone (anti-contournement). Via Supabase Realtime (table `messages` par réservation). Non commencée. **← prochaine tâche. = vrai morceau de dev, protège la commission.**
 4. **Vrais comptes coiffeurs** — au-delà de Karim (recrutement via réseau de Salim, comptes créés à la main).
 5. **B2B villas/riads** — offre conciergerie (forfait/commission), via le réseau hôtelier de Salim.
 6. **Nettoyage / contenu** — corriger fautes du PDF source si réutilisé ; brancher le formulaire de la page /coiffeurs (candidature) ; domaine custom (plus tard).
+
+## 8. Google OAuth — config en place (réf. si besoin de retoucher)
+
+- **Côté code** : rien à faire, tout est branché (`connexionGoogle` dans `app/compte/page.tsx` + `createBrowserClient` de `@supabase/ssr` gère le retour OAuth automatiquement).
+- **Projet Google Cloud** : `winged-bliss-376218` (« My First Project »), compte `walidazzimani193@gmail.com`.
+- **Client OAuth** « WAL web » → Client ID `938224437921-pks7f0b5agl8llsbkmgrkkn36q43fdol.apps.googleusercontent.com` (secret `GOCSPX-…` conservé par Salim en screenshots, régénérable dans Google → Clients → WAL web si besoin).
+- **Redirect URI Google** = callback Supabase `https://melzazwpcdgyexzhwkhs.supabase.co/auth/v1/callback` · **JS origins** = `https://wal-private.vercel.app` + `http://localhost:3000`.
+- **Supabase** : Authentication → Sign In / Providers → **Google activé** (Client ID + Secret collés).
+- **App Google PUBLIÉE « En production »** (Audience) → tout client peut se connecter, scopes basiques email/profil = pas de validation Google requise.
+- **Pièges** : (a) Google Cloud exige la 2FA du compte (Salim a mis Google Authenticator = hors-ligne, pas de SMS, marche Maroc+Belgique) ; (b) ne pas confondre « Sign In / Providers » (le bon) avec « OAuth Server » / « OAuth Apps » (pièges Supabase) ; (c) le secret OAuth ne s'affiche qu'une seule fois à la création.
 
 ## 7. Décisions actées (ne pas re-débattre)
 
