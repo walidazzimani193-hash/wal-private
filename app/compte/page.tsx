@@ -33,10 +33,9 @@ export default function ComptePage() {
   const [profil, setProfil] = useState<ClientProfil>({ prenom: "", telephone: "", adresse: "", zone: "" });
   const [resas, setResas] = useState<Reservation[]>([]);
 
-  // auth email OTP
+  // auth email (lien magique)
   const [authEmail, setAuthEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [step, setStep] = useState<"email" | "code">("email");
+  const [linkSent, setLinkSent] = useState(false);
   const [authMsg, setAuthMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [profilSaved, setProfilSaved] = useState(false);
@@ -92,29 +91,20 @@ export default function ComptePage() {
     };
   }, [supabase, userId, chargerDonnees]);
 
-  const envoyerCode = async () => {
+  const envoyerLien = async () => {
     if (!supabase || !authEmail.trim()) return;
     setBusy(true);
     setAuthMsg(null);
     const { error } = await supabase.auth.signInWithOtp({
       email: authEmail.trim(),
-      options: { shouldCreateUser: true },
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${window.location.origin}/compte`,
+      },
     });
     setBusy(false);
-    if (error) setAuthMsg("Impossible d'envoyer le code. Vérifiez l'email.");
-    else {
-      setStep("code");
-      setAuthMsg("Code envoyé. Regardez votre boîte mail.");
-    }
-  };
-
-  const verifierCode = async () => {
-    if (!supabase || !code.trim()) return;
-    setBusy(true);
-    setAuthMsg(null);
-    const { error } = await supabase.auth.verifyOtp({ email: authEmail.trim(), token: code.trim(), type: "email" });
-    setBusy(false);
-    if (error) setAuthMsg("Code incorrect ou expiré.");
+    if (error) setAuthMsg("Impossible d'envoyer le lien. Vérifiez l'email.");
+    else setLinkSent(true);
   };
 
   const connexionGoogle = async () => {
@@ -136,9 +126,8 @@ export default function ComptePage() {
 
   const seDeconnecter = async () => {
     await supabase?.auth.signOut();
-    setStep("email");
+    setLinkSent(false);
     setAuthEmail("");
-    setCode("");
   };
 
   const inputDark =
@@ -194,48 +183,40 @@ export default function ComptePage() {
             <span className="flex-1 h-px bg-white/10" />
           </div>
 
-          {step === "email" ? (
+          {linkSent ? (
+            <div className="bg-white/5 border border-[#C4A882]/30 p-6 text-center">
+              <p className="text-white text-sm mb-2">Lien envoyé ✓</p>
+              <p className="text-white/50 text-xs leading-relaxed">
+                Ouvrez l&apos;email reçu à <span className="text-[#C4A882]">{authEmail}</span> et cliquez sur le lien
+                pour vous connecter. Pensez à vérifier vos spams.
+              </p>
+              <button
+                onClick={() => setLinkSent(false)}
+                className="text-white/40 text-xs tracking-widest hover:text-white transition-colors mt-4"
+              >
+                ← CHANGER D&apos;EMAIL
+              </button>
+            </div>
+          ) : (
             <div className="flex flex-col gap-4">
               <input
                 type="email"
                 placeholder="Votre email"
                 value={authEmail}
                 onChange={(e) => setAuthEmail(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && envoyerCode()}
+                onKeyDown={(e) => e.key === "Enter" && envoyerLien()}
                 className={inputDark}
               />
               <button
-                onClick={envoyerCode}
+                onClick={envoyerLien}
                 disabled={busy || !authEmail}
                 className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
               >
-                {busy ? "ENVOI..." : "RECEVOIR MON CODE"}
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="Code à 6 chiffres"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && verifierCode()}
-                className={`${inputDark} text-center tracking-[0.5em]`}
-              />
-              <button
-                onClick={verifierCode}
-                disabled={busy || !code}
-                className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
-              >
-                {busy ? "VÉRIFICATION..." : "ME CONNECTER"}
-              </button>
-              <button onClick={() => setStep("email")} className="text-white/40 text-xs tracking-widest hover:text-white transition-colors">
-                ← CHANGER D'EMAIL
+                {busy ? "ENVOI..." : "RECEVOIR MON LIEN DE CONNEXION"}
               </button>
             </div>
           )}
-          {authMsg && <p className="text-[#C4A882] text-xs text-center mt-4">{authMsg}</p>}
+          {authMsg && <p className="text-red-300/80 text-xs text-center mt-4">{authMsg}</p>}
         </div>
       </div>
     );
