@@ -59,6 +59,12 @@ export default function CoiffeurPage() {
             <p className="text-white/40 text-base leading-relaxed mt-8 max-w-xl">
               Rejoignez WAL Private et transformez votre expertise en revenus flexibles, sans les contraintes d&apos;un salon traditionnel.
             </p>
+            <p className="text-white/50 text-sm mt-8">
+              Déjà partenaire ?{" "}
+              <Link href="/pro" className="text-[#C4A882] hover:text-white transition-colors underline underline-offset-4">
+                Connectez-vous à votre espace coiffeur
+              </Link>
+            </p>
           </div>
         </div>
       </section>

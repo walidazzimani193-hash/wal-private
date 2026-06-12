@@ -70,6 +70,13 @@ export default function Navbar() {
         {/* CTA desktop */}
         <div className="hidden md:flex items-center gap-4">
           <Link
+            href="/pro"
+            className="text-white/60 hover:text-white text-xs tracking-widest transition-colors duration-200"
+            style={{ letterSpacing: "0.12em" }}
+          >
+            CONNEXION
+          </Link>
+          <Link
             href="/coiffeurs"
             className="text-white border border-[#C4A882] hover:bg-[#C4A882] hover:text-[#0A0A0A] px-5 py-2.5 text-xs tracking-widest transition-all duration-300"
             style={{ letterSpacing: "0.15em" }}
@@ -156,6 +163,13 @@ export default function Navbar() {
                 onClick={() => setMenuOpen(false)}
               >
                 REJOINDRE
+              </Link>
+              <Link
+                href="/pro"
+                className="block text-center text-white/60 hover:text-white px-5 py-3 text-xs tracking-widest transition-colors duration-200 mt-1"
+                onClick={() => setMenuOpen(false)}
+              >
+                CONNEXION COIFFEUR
               </Link>
             </motion.div>
           </motion.div>

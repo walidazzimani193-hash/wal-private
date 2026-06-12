@@ -42,6 +42,24 @@ export const zonesCentre = ["Guéliz", "Hivernage", "Médina", "Majorelle"];
 export const zonesEtendues = ["Targa", "Palmeraie", "Route de l'Ourika", "Autre zone"];
 export const zones = [...zonesCentre, ...zonesEtendues];
 
+// Indicatifs pays — Maroc + principaux pays des vacanciers à Marrakech
+export const indicatifs = [
+  { code: "+212", pays: "Maroc", drapeau: "🇲🇦" },
+  { code: "+33", pays: "France", drapeau: "🇫🇷" },
+  { code: "+32", pays: "Belgique", drapeau: "🇧🇪" },
+  { code: "+34", pays: "Espagne", drapeau: "🇪🇸" },
+  { code: "+44", pays: "Royaume-Uni", drapeau: "🇬🇧" },
+  { code: "+49", pays: "Allemagne", drapeau: "🇩🇪" },
+  { code: "+31", pays: "Pays-Bas", drapeau: "🇳🇱" },
+  { code: "+39", pays: "Italie", drapeau: "🇮🇹" },
+  { code: "+41", pays: "Suisse", drapeau: "🇨🇭" },
+  { code: "+1", pays: "USA / Canada", drapeau: "🇺🇸" },
+  { code: "+351", pays: "Portugal", drapeau: "🇵🇹" },
+  { code: "+971", pays: "Émirats", drapeau: "🇦🇪" },
+  { code: "+966", pays: "Arabie Saoudite", drapeau: "🇸🇦" },
+  { code: "autre", pays: "Autre pays…", drapeau: "🌍" },
+];
+
 export const creneaux = [
   { id: "matin", label: "Matin", heures: "9 h – 12 h" },
   { id: "apres-midi", label: "Après-midi", heures: "12 h – 17 h" },

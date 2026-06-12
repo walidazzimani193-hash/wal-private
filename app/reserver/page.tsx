@@ -7,6 +7,7 @@ import {
   zonesCentre,
   zonesEtendues,
   creneaux,
+  indicatifs,
   MIN_COMMANDE,
   round5,
   calculerPrix,
@@ -38,8 +39,13 @@ export default function ReserverPage() {
   const [creneau, setCreneau] = useState<string | null>(null);
   const [zone, setZone] = useState<string | null>(null);
   const [prenom, setPrenom] = useState("");
+  const [indicatif, setIndicatif] = useState("+212");
+  const [indicatifAutre, setIndicatifAutre] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [notes, setNotes] = useState("");
+
+  const indicatifFinal = indicatif === "autre" ? indicatifAutre.trim() : indicatif;
+  const whatsappComplet = `${indicatifFinal} ${whatsapp.trim()}`.trim();
   const [statut, setStatut] = useState<"idle" | "envoi" | "ok" | "erreur">("idle");
 
   const prestation = prestationsV1.find((p) => p.id === prestationId) ?? null;
@@ -58,6 +64,7 @@ export default function ReserverPage() {
     zone !== null &&
     prenom.trim() !== "" &&
     whatsapp.trim() !== "" &&
+    indicatifFinal !== "" &&
     (lastMinute || (date !== "" && creneau !== null));
 
   const quandTexte = lastMinute
@@ -74,7 +81,7 @@ export default function ReserverPage() {
     if (supabase) {
       const { error } = await supabase.from("reservations").insert({
         client_prenom: prenom.trim(),
-        client_whatsapp: whatsapp.trim(),
+        client_whatsapp: whatsappComplet,
         prestation: prestation.id,
         prestation_label: prestation.label,
         grade: grade.id,
@@ -96,7 +103,7 @@ export default function ReserverPage() {
       `Zone : ${zone}${zoneEtendue ? " (zone étendue +50 MAD)" : ""}`,
       `Prix estimé : ${prix.total} MAD${dimanche ? " (majoration dimanche +20 %)" : ""}`,
       `Prénom : ${prenom.trim()}`,
-      `WhatsApp : ${whatsapp.trim()}`,
+      `WhatsApp : ${whatsappComplet}`,
       notes.trim() ? `Notes : ${notes.trim()}` : null,
     ].filter(Boolean);
     window.open(`https://wa.me/${WAL_WHATSAPP}?text=${encodeURIComponent(lignes.join("\n"))}`, "_blank");
@@ -313,13 +320,36 @@ export default function ReserverPage() {
                   <label className={labelCls} style={{ letterSpacing: "0.15em" }}>
                     WHATSAPP
                   </label>
-                  <input
-                    type="tel"
-                    placeholder="+212 6 XX XX XX XX"
-                    value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
-                    className={inputCls}
-                  />
+                  <div className="flex gap-2">
+                    <select
+                      value={indicatif}
+                      onChange={(e) => setIndicatif(e.target.value)}
+                      className={`${inputCls} max-w-[130px] cursor-pointer`}
+                    >
+                      {indicatifs.map((i) => (
+                        <option key={i.code} value={i.code}>
+                          {i.drapeau} {i.code === "autre" ? "Autre" : i.code}
+                        </option>
+                      ))}
+                    </select>
+                    {indicatif === "autre" && (
+                      <input
+                        type="tel"
+                        placeholder="+xxx"
+                        value={indicatifAutre}
+                        onChange={(e) => setIndicatifAutre(e.target.value)}
+                        className={`${inputCls} max-w-[90px]`}
+                      />
+                    )}
+                    <input
+                      type="tel"
+                      placeholder="6 12 34 56 78"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      className={`${inputCls} flex-1`}
+                    />
+                  </div>
+                  <p className="text-[11px] text-[#6B6B6B]">Tout pays accepté — pour les résidents comme pour les vacanciers.</p>
                 </div>
               </div>
               <div className="flex flex-col gap-2 mt-5">

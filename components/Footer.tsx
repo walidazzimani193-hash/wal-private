@@ -39,6 +39,7 @@ export default function Footer() {
               { href: "/clients", label: "Pour les clients" },
               { href: "/a-propos", label: "À propos" },
               { href: "/contact", label: "Contact" },
+              { href: "/pro", label: "Espace coiffeur — connexion" },
             ].map(({ href, label }) => (
               <Link
                 key={href}
