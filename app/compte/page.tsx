@@ -33,9 +33,10 @@ export default function ComptePage() {
   const [profil, setProfil] = useState<ClientProfil>({ prenom: "", telephone: "", adresse: "", zone: "" });
   const [resas, setResas] = useState<Reservation[]>([]);
 
-  // auth email (lien magique)
+  // auth email (lien magique + code 6 chiffres)
   const [authEmail, setAuthEmail] = useState("");
   const [linkSent, setLinkSent] = useState(false);
+  const [code, setCode] = useState("");
   const [authMsg, setAuthMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [profilSaved, setProfilSaved] = useState(false);
@@ -103,8 +104,22 @@ export default function ComptePage() {
       },
     });
     setBusy(false);
-    if (error) setAuthMsg("Impossible d'envoyer le lien. Vérifiez l'email.");
+    if (error) setAuthMsg("Impossible d'envoyer l'email. Vérifiez l'adresse.");
     else setLinkSent(true);
+  };
+
+  const verifierCode = async () => {
+    if (!supabase || code.trim().length < 6) return;
+    setBusy(true);
+    setAuthMsg(null);
+    const { error } = await supabase.auth.verifyOtp({
+      email: authEmail.trim(),
+      token: code.trim(),
+      type: "email",
+    });
+    setBusy(false);
+    if (error) setAuthMsg("Code incorrect ou expiré.");
+    // succès → onAuthStateChange remplit userId et bascule l'écran
   };
 
   const connexionGoogle = async () => {
@@ -184,15 +199,36 @@ export default function ComptePage() {
           </div>
 
           {linkSent ? (
-            <div className="bg-white/5 border border-[#C4A882]/30 p-6 text-center">
-              <p className="text-white text-sm mb-2">Lien envoyé ✓</p>
-              <p className="text-white/50 text-xs leading-relaxed">
-                Ouvrez l&apos;email reçu à <span className="text-[#C4A882]">{authEmail}</span> et cliquez sur le lien
-                pour vous connecter. Pensez à vérifier vos spams.
+            <div className="bg-white/5 border border-[#C4A882]/30 p-6">
+              <p className="text-white text-sm mb-2 text-center">Email envoyé ✓</p>
+              <p className="text-white/50 text-xs leading-relaxed text-center mb-5">
+                Envoyé à <span className="text-[#C4A882]">{authEmail}</span>. Cliquez le lien dans
+                l&apos;email, <span className="text-white/70">ou</span> entrez le code reçu ci-dessous.
+                Pensez à vérifier vos spams.
               </p>
+              <input
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="Code à 6 chiffres"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                onKeyDown={(e) => e.key === "Enter" && verifierCode()}
+                className={`${inputDark} w-full text-center tracking-[0.5em]`}
+              />
               <button
-                onClick={() => setLinkSent(false)}
-                className="text-white/40 text-xs tracking-widest hover:text-white transition-colors mt-4"
+                onClick={verifierCode}
+                disabled={busy || code.length < 6}
+                className="w-full mt-3 bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
+              >
+                {busy ? "VÉRIFICATION..." : "ME CONNECTER"}
+              </button>
+              <button
+                onClick={() => {
+                  setLinkSent(false);
+                  setCode("");
+                  setAuthMsg(null);
+                }}
+                className="text-white/40 text-xs tracking-widest hover:text-white transition-colors mt-4 block mx-auto"
               >
                 ← CHANGER D&apos;EMAIL
               </button>
@@ -212,7 +248,7 @@ export default function ComptePage() {
                 disabled={busy || !authEmail}
                 className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
               >
-                {busy ? "ENVOI..." : "RECEVOIR MON LIEN DE CONNEXION"}
+                {busy ? "ENVOI..." : "RECEVOIR MON LIEN / CODE"}
               </button>
             </div>
           )}
