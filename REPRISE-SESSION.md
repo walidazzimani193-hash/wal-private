@@ -1,6 +1,6 @@
 # WAL Private — État du projet & point de reprise
 
-**Dernière mise à jour** : 12 juin 2026 (nuit — SMTP Gmail + code connexion)
+**Dernière mise à jour** : 13 juin 2026 (messagerie interne client↔coiffeur — FAIT)
 **Live** : https://wal-private.vercel.app · **Repo** : github.com/walidazzimani193-hash/wal-private (privé)
 **Stack** : Next.js 16 + React 19 + Tailwind 4 + framer-motion + **Supabase** (auth, DB, realtime)
 
@@ -50,8 +50,8 @@ Plateforme marketplace de **coiffeurs à domicile à Marrakech** (repositionné 
 
 1. ~~**Google OAuth 1-clic**~~ ✅ **FAIT 12/06** (voir détails ci-dessous, section 8).
 2. ~~**SMTP custom**~~ ✅ **FAIT 12/06** (Gmail en dépannage). SMTP Gmail (`smtp.gmail.com:465`, compte `walidazzimani193@gmail.com` + mot de passe d'application) branché dans Supabase → emails fiables. Template « Magic Link » enrichi de `{{ .Token }}` → l'email contient **lien + code à 8 chiffres**, et `/compte` propose les deux au choix (`signInWithOtp` + `verifyOtp`). ⚠️ codes OTP = **8 chiffres** ici. **Resend + domaine custom = à faire « semaine prochaine »** (Salim prend le domaine plus tard ; Resend exige un domaine vérifié).
-3. **Messagerie interne client↔coiffeur** — demandée par Salim. But : garder la main sur la liaison, masquer automatiquement les numéros de téléphone (anti-contournement). Via Supabase Realtime (table `messages` par réservation). Non commencée. **← prochaine tâche. = vrai morceau de dev, protège la commission.**
-4. **Vrais comptes coiffeurs** — au-delà de Karim (recrutement via réseau de Salim, comptes créés à la main).
+3. ~~**Messagerie interne client↔coiffeur**~~ ✅ **FAIT 13/06** (commits `689032e` + `7904db6`, live + testé OK). Table `messages` par réservation (`supabase/03_messages.sql` exécuté en prod), RLS participants-only, **masquage auto des numéros via trigger Postgres** (suites 6+ chiffres + formats espacés → `[numéro masqué]`), Supabase Realtime, composant `components/Chat.tsx` réutilisable (badge non-lu simple). Fil ouvert au statut `acceptee`, écriture jusqu'à **24 h après `terminee`** puis lecture seule. Branché sur `/pro` (MES COURSES) + `/compte` (en cours + historique). **Cohérence anti-contournement** : sur `/pro`, le numéro WhatsApp client n'est plus affiché si le client a un compte (`client_id`) → messagerie seule ; affiché uniquement pour réservations **invité** (sans compte, pas de messagerie). Champ WhatsApp gardé sur `/reserver` (repli admin + invités).
+4. **Vrais comptes coiffeurs** — au-delà de Karim (recrutement via réseau de Salim, comptes créés à la main). **← prochaine.**
 5. **B2B villas/riads** — offre conciergerie (forfait/commission), via le réseau hôtelier de Salim.
 6. **Nettoyage / contenu** — corriger fautes du PDF source si réutilisé ; brancher le formulaire de la page /coiffeurs (candidature) ; domaine custom (plus tard).
 
