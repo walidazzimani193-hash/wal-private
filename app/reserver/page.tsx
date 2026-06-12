@@ -1,57 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import {
+  prestationsV1,
+  grades,
+  zonesCentre,
+  zonesEtendues,
+  creneaux,
+  MIN_COMMANDE,
+  round5,
+  calculerPrix,
+} from "@/lib/catalogue";
+import { getSupabase } from "@/lib/supabase";
 
-// Numéro WhatsApp WAL (format international sans +)
+// Numéro WhatsApp WAL (repli si la plateforme n'est pas encore configurée)
 const WAL_WHATSAPP = "32496974983";
-
-const MIN_COMMANDE = 150;
-const ZONE_ETENDUE_FEE = 50;
-
-type Categorie = "A" | "B";
-
-type Prestation = {
-  id: string;
-  label: string;
-  groupe: "Femmes" | "Hommes & enfants";
-  base: number | null; // null = sur devis
-  categorie: Categorie;
-  acompte?: number;
-  duree: string;
-};
-
-const prestations: Prestation[] = [
-  { id: "brushing", label: "Brushing", groupe: "Femmes", base: 100, categorie: "A", duree: "45 min" },
-  { id: "coupe-brushing", label: "Coupe + brushing", groupe: "Femmes", base: 250, categorie: "A", duree: "1 h 15" },
-  { id: "couleur-racine", label: "Couleur racine", groupe: "Femmes", base: 300, categorie: "B", acompte: 100, duree: "2 h" },
-  { id: "couleur-complete", label: "Couleur complète", groupe: "Femmes", base: 450, categorie: "B", acompte: 150, duree: "2 h" },
-  { id: "balayage", label: "Balayage / mèches", groupe: "Femmes", base: 700, categorie: "B", acompte: 250, duree: "3 h" },
-  { id: "soin", label: "Soin profond (protéine, botox)", groupe: "Femmes", base: 300, categorie: "B", acompte: 100, duree: "1 h" },
-  { id: "lissage", label: "Lissage (brésilien, tanin)", groupe: "Femmes", base: 1200, categorie: "B", acompte: 400, duree: "3-4 h" },
-  { id: "chignon", label: "Chignon / coiffure événement", groupe: "Femmes", base: 350, categorie: "A", duree: "1 h" },
-  { id: "mariee", label: "Forfait mariée (essai + jour J)", groupe: "Femmes", base: null, categorie: "B", duree: "sur devis" },
-  { id: "coupe-homme", label: "Coupe homme", groupe: "Hommes & enfants", base: 100, categorie: "A", duree: "30 min" },
-  { id: "coupe-barbe", label: "Coupe + barbe", groupe: "Hommes & enfants", base: 150, categorie: "A", duree: "45 min" },
-  { id: "coupe-enfant", label: "Coupe enfant (-12 ans)", groupe: "Hommes & enfants", base: 80, categorie: "A", duree: "30 min" },
-];
-
-const grades = [
-  { id: "novice", roman: "I", label: "Novice", mult: 0.7, desc: "Jeunes talents certifiés" },
-  { id: "confirme", roman: "II", label: "Confirmé", mult: 1, desc: "Le professionnel de référence" },
-  { id: "expert", roman: "III", label: "Expert", mult: 1.6, desc: "Spécialiste reconnu" },
-  { id: "maitre", roman: "IV", label: "Maître", mult: 2.5, desc: "L'excellence absolue" },
-];
-
-const zonesCentre = ["Guéliz", "Hivernage", "Médina", "Majorelle"];
-const zonesEtendues = ["Targa", "Palmeraie", "Route de l'Ourika", "Autre zone"];
-
-const creneaux = [
-  { id: "matin", label: "Matin", heures: "9 h – 12 h" },
-  { id: "apres-midi", label: "Après-midi", heures: "12 h – 17 h" },
-  { id: "soiree", label: "Soirée", heures: "17 h – 21 h" },
-];
-
-const round5 = (n: number) => Math.round(n / 5) * 5;
 
 function SectionTitle({ n, title }: { n: string; title: string }) {
   return (
@@ -77,27 +40,18 @@ export default function ReserverPage() {
   const [prenom, setPrenom] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [notes, setNotes] = useState("");
-  const [sent, setSent] = useState(false);
+  const [statut, setStatut] = useState<"idle" | "envoi" | "ok" | "erreur">("idle");
 
-  const prestation = prestations.find((p) => p.id === prestationId) ?? null;
+  const prestation = prestationsV1.find((p) => p.id === prestationId) ?? null;
   const grade = grades.find((g) => g.id === gradeId)!;
   const zoneEtendue = zone !== null && zonesEtendues.includes(zone);
   const dimanche = !lastMinute && date !== "" && new Date(date + "T12:00:00").getDay() === 0;
-
   const today = new Date().toISOString().split("T")[0];
 
   const prix = useMemo(() => {
     if (!prestation || prestation.base === null) return null;
-    let p = round5(prestation.base * grade.mult);
-    if (lastMinute) p = round5(p * 1.25);
-    if (dimanche) p = round5(p * 1.2);
-    if (zoneEtendue) p += ZONE_ETENDUE_FEE;
-    const minimumApplique = p < MIN_COMMANDE;
-    return { total: Math.max(p, MIN_COMMANDE), minimumApplique };
+    return calculerPrix({ base: prestation.base, mult: grade.mult, lastMinute, dimanche, zoneEtendue });
   }, [prestation, grade, lastMinute, dimanche, zoneEtendue]);
-
-  const acompte = prestation?.categorie === "B" && !lastMinute ? prestation.acompte ?? null : null;
-  const surDevis = prestation?.base === null;
 
   const valide =
     prestation !== null &&
@@ -106,29 +60,75 @@ export default function ReserverPage() {
     whatsapp.trim() !== "" &&
     (lastMinute || (date !== "" && creneau !== null));
 
-  const envoyer = () => {
-    if (!valide || !prestation) return;
+  const quandTexte = lastMinute
+    ? "last_minute"
+    : `${date} · ${creneaux.find((c) => c.id === creneau)?.label}`;
+
+  const envoyer = async () => {
+    if (!valide || !prestation || !prix) return;
+    setStatut("envoi");
+
+    const supabase = getSupabase();
+
+    // Mode plateforme : on enregistre la demande, les coiffeurs en ligne la voient
+    if (supabase) {
+      const { error } = await supabase.from("reservations").insert({
+        client_prenom: prenom.trim(),
+        client_whatsapp: whatsapp.trim(),
+        prestation: prestation.id,
+        prestation_label: prestation.label,
+        grade: grade.id,
+        prix: prix.total,
+        zone,
+        quand: quandTexte,
+        notes: notes.trim() || null,
+      });
+      setStatut(error ? "erreur" : "ok");
+      return;
+    }
+
+    // Repli : pas encore de plateforme → on ouvre WhatsApp
     const lignes = [
       "Nouvelle réservation WAL Private",
       `Prestation : ${prestation.label}`,
       `Grade : ${grade.label} (${grade.roman})`,
-      lastMinute
-        ? "Quand : LAST MINUTE — aujourd'hui (+25 %)"
-        : `Quand : ${date} · ${creneaux.find((c) => c.id === creneau)?.label} (${creneaux.find((c) => c.id === creneau)?.heures})`,
+      lastMinute ? "Quand : LAST MINUTE — aujourd'hui (+25 %)" : `Quand : ${quandTexte}`,
       `Zone : ${zone}${zoneEtendue ? " (zone étendue +50 MAD)" : ""}`,
-      surDevis ? "Prix : sur devis" : `Prix estimé : ${prix!.total} MAD${dimanche ? " (majoration dimanche +20 %)" : ""}`,
-      acompte ? `Acompte produit à prévoir : ${acompte} MAD` : null,
+      `Prix estimé : ${prix.total} MAD${dimanche ? " (majoration dimanche +20 %)" : ""}`,
       `Prénom : ${prenom.trim()}`,
       `WhatsApp : ${whatsapp.trim()}`,
       notes.trim() ? `Notes : ${notes.trim()}` : null,
     ].filter(Boolean);
     window.open(`https://wa.me/${WAL_WHATSAPP}?text=${encodeURIComponent(lignes.join("\n"))}`, "_blank");
-    setSent(true);
+    setStatut("ok");
   };
 
   const inputCls =
     "bg-white border border-[#E8E4DF] px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors";
   const labelCls = "text-xs tracking-widest text-[#6B6B6B]";
+
+  // Écran de confirmation
+  if (statut === "ok") {
+    return (
+      <div className="bg-[#0A0A0A] min-h-screen flex items-center justify-center px-6">
+        <div className="max-w-lg text-center">
+          <p className="sep text-[#C4A882]/60 text-xs mb-8 justify-center" style={{ letterSpacing: "0.3em" }}>
+            DEMANDE ENVOYÉE
+          </p>
+          <h1
+            className="text-white leading-tight mb-6"
+            style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 300 }}
+          >
+            On vous trouve <em style={{ fontStyle: "italic", color: "#C4A882" }}>votre coiffeur.</em>
+          </h1>
+          <p className="text-white/50 text-sm leading-relaxed">
+            Vous recevez la confirmation sur WhatsApp dès qu&apos;un professionnel accepte —
+            sous 2 h, 30 minutes en Last Minute.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col">
@@ -163,7 +163,7 @@ export default function ReserverPage() {
                     {groupe.toUpperCase()}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {prestations
+                    {prestationsV1
                       .filter((p) => p.groupe === groupe)
                       .map((p) => (
                         <button
@@ -177,17 +177,10 @@ export default function ReserverPage() {
                           <div className="flex items-baseline justify-between gap-3">
                             <span className="text-sm text-[#0A0A0A]">{p.label}</span>
                             <span className="text-sm text-[#C4A882] whitespace-nowrap">
-                              {p.base === null ? "Sur devis" : `dès ${round5(p.base * 0.7)} MAD`}
+                              dès {round5((p.base ?? 0) * 0.7)} MAD
                             </span>
                           </div>
-                          <div className="flex items-center justify-between mt-1.5">
-                            <span className="text-xs text-[#6B6B6B]">{p.duree}</span>
-                            {p.categorie === "B" && p.base !== null && (
-                              <span className="text-[10px] tracking-wider text-[#6B6B6B]" style={{ letterSpacing: "0.1em" }}>
-                                ACOMPTE PRODUIT {p.acompte} MAD
-                              </span>
-                            )}
-                          </div>
+                          <span className="text-xs text-[#6B6B6B]">{p.duree}</span>
                         </button>
                       ))}
                   </div>
@@ -200,8 +193,7 @@ export default function ReserverPage() {
               <SectionTitle n="02" title="Sélectionnez le grade" />
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {grades.map((g) => {
-                  const prixGrade =
-                    prestation && prestation.base !== null ? round5(prestation.base * g.mult) : null;
+                  const prixGrade = prestation && prestation.base !== null ? round5(prestation.base * g.mult) : null;
                   return (
                     <button
                       key={g.id}
@@ -247,7 +239,7 @@ export default function ReserverPage() {
                   <span className={`text-xs tracking-wider ${lastMinute ? "text-[#C4A882]" : "text-[#6B6B6B]"}`}>+25 %</span>
                 </div>
                 <p className={`text-xs mt-1 ${lastMinute ? "text-white/50" : "text-[#6B6B6B]"}`}>
-                  Confirmation en 30 minutes. Produits fournis par WAL si nécessaire.
+                  Confirmation en 30 minutes par le premier coiffeur disponible.
                 </p>
               </button>
 
@@ -375,48 +367,40 @@ export default function ReserverPage() {
               </dl>
 
               <div className="border-t border-white/10 mt-6 pt-6">
-                {surDevis ? (
-                  <p className="text-white text-sm">Sur devis — nous revenons vers vous sur WhatsApp.</p>
-                ) : (
-                  <>
-                    <div className="flex justify-between items-baseline">
-                      <span className="text-white/40 text-sm">Prix total TTC</span>
-                      <span className="text-[#C4A882]" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "34px", fontWeight: 400 }}>
-                        {prix ? `${prix.total} MAD` : "—"}
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-1 mt-2 text-xs text-white/40">
-                      {lastMinute && <span>Inclut majoration Last Minute +25 %</span>}
-                      {dimanche && <span>Inclut majoration dimanche +20 %</span>}
-                      {zoneEtendue && <span>Inclut déplacement zone étendue +50 MAD</span>}
-                      {prix?.minimumApplique && <span>Minimum de commande : {MIN_COMMANDE} MAD</span>}
-                      {acompte && (
-                        <span className="text-[#C4A882]">
-                          Acompte produit : {acompte} MAD à la réservation — solde en espèces le jour J
-                        </span>
-                      )}
-                      {!acompte && prix && <span>Aucun prépaiement — règlement en espèces après la prestation</span>}
-                    </div>
-                  </>
-                )}
+                <div className="flex justify-between items-baseline">
+                  <span className="text-white/40 text-sm">Prix total TTC</span>
+                  <span className="text-[#C4A882]" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "34px", fontWeight: 400 }}>
+                    {prix ? `${prix.total} MAD` : "—"}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1 mt-2 text-xs text-white/40">
+                  {lastMinute && <span>Inclut majoration Last Minute +25 %</span>}
+                  {dimanche && <span>Inclut majoration dimanche +20 %</span>}
+                  {zoneEtendue && <span>Inclut déplacement zone étendue +50 MAD</span>}
+                  {prix?.minimumApplique && <span>Minimum de commande : {MIN_COMMANDE} MAD</span>}
+                  {prix && <span>Règlement en espèces après la prestation</span>}
+                </div>
               </div>
 
               <button
                 type="button"
-                disabled={!valide}
+                disabled={!valide || statut === "envoi"}
                 onClick={envoyer}
                 className={`w-full text-xs tracking-[0.2em] py-4 mt-8 transition-colors duration-300 ${
-                  valide
+                  valide && statut !== "envoi"
                     ? "bg-[#C4A882] text-[#0A0A0A] hover:bg-white cursor-pointer"
                     : "bg-white/10 text-white/30 cursor-not-allowed"
                 }`}
               >
-                CONFIRMER SUR WHATSAPP
+                {statut === "envoi" ? "ENVOI..." : "RÉSERVER"}
               </button>
+              {statut === "erreur" && (
+                <p className="text-red-300/80 text-xs mt-4">
+                  Un souci est survenu. Réessayez, ou écrivez-nous sur WhatsApp.
+                </p>
+              )}
               <p className="text-white/30 text-xs leading-relaxed mt-4">
-                {sent
-                  ? "Votre demande est partie sur WhatsApp. Nous confirmons votre coiffeur sous 2 h (30 min en Last Minute)."
-                  : "En confirmant, votre demande s'ouvre dans WhatsApp — un dernier envoi et c'est réservé. Annulation gratuite jusqu'à 24 h avant (48 h pour les prestations avec produits)."}
+                Votre demande part au premier coiffeur disponible de votre zone. Annulation gratuite jusqu&apos;à 24 h avant.
               </p>
             </div>
           </aside>
