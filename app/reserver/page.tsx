@@ -36,7 +36,9 @@ function SectionTitle({ n, title }: { n: string; title: string }) {
 }
 
 export default function ReserverPage() {
-  const [prestationId, setPrestationId] = useState<string | null>(null);
+  const [prestationIds, setPrestationIds] = useState<string[]>([]);
+  const togglePrestation = (id: string) =>
+    setPrestationIds((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
   const [gradeId, setGradeId] = useState<string>("confirme");
   const [lastMinute, setLastMinute] = useState(false);
   const [date, setDate] = useState("");
@@ -81,7 +83,7 @@ export default function ReserverPage() {
       const raw = localStorage.getItem(DRAFT_KEY);
       if (!raw) return;
       const d = JSON.parse(raw);
-      if (d.prestationId) setPrestationId(d.prestationId);
+      if (Array.isArray(d.prestationIds)) setPrestationIds(d.prestationIds);
       if (d.gradeId) setGradeId(d.gradeId);
       if (typeof d.lastMinute === "boolean") setLastMinute(d.lastMinute);
       if (d.date) setDate(d.date);
@@ -99,19 +101,20 @@ export default function ReserverPage() {
     }
   }
 
-  const prestation = prestationsV1.find((p) => p.id === prestationId) ?? null;
+  const prestationsSel = prestationsV1.filter((p) => prestationIds.includes(p.id));
+  const baseTotale = prestationsSel.reduce((s, p) => s + (p.base ?? 0), 0);
   const grade = grades.find((g) => g.id === gradeId)!;
   const zoneEtendue = zone !== null && zonesEtendues.includes(zone);
   const dimanche = !lastMinute && date !== "" && new Date(date + "T12:00:00").getDay() === 0;
   const today = new Date().toISOString().split("T")[0];
 
   const prix = useMemo(() => {
-    if (!prestation || prestation.base === null) return null;
-    return calculerPrix({ base: prestation.base, mult: grade.mult, lastMinute, dimanche, zoneEtendue });
-  }, [prestation, grade, lastMinute, dimanche, zoneEtendue]);
+    if (prestationIds.length === 0) return null;
+    return calculerPrix({ base: baseTotale, mult: grade.mult, lastMinute, dimanche, zoneEtendue });
+  }, [prestationIds, baseTotale, grade, lastMinute, dimanche, zoneEtendue]);
 
   const valide =
-    prestation !== null &&
+    prestationsSel.length > 0 &&
     zone !== null &&
     prenom.trim() !== "" &&
     whatsapp.trim() !== "" &&
@@ -131,7 +134,7 @@ export default function ReserverPage() {
       localStorage.setItem(
         DRAFT_KEY,
         JSON.stringify({
-          prestationId, gradeId, lastMinute, date, creneau, zone,
+          prestationIds, gradeId, lastMinute, date, creneau, zone,
           prenom, indicatif, indicatifAutre, whatsapp, notes,
         })
       );
@@ -142,7 +145,7 @@ export default function ReserverPage() {
   };
 
   const envoyer = async () => {
-    if (!valide || !prestation || !prix) return;
+    if (!valide || prestationsSel.length === 0 || !prix) return;
     if (lmBloque) {
       allerCreerCompte();
       return;
@@ -171,8 +174,8 @@ export default function ReserverPage() {
       const { error } = await supabase.from("reservations").insert({
         client_prenom: prenom.trim(),
         client_whatsapp: whatsappComplet,
-        prestation: prestation.id,
-        prestation_label: prestation.label,
+        prestation: prestationsSel.map((p) => p.id).join(","),
+        prestation_label: prestationsSel.map((p) => p.label).join(" + "),
         grade: grade.id,
         prix: prix.total,
         zone,
@@ -187,7 +190,7 @@ export default function ReserverPage() {
     // Repli : pas encore de plateforme → on ouvre WhatsApp
     const lignes = [
       "Nouvelle réservation WAL Private",
-      `Prestation : ${prestation.label}`,
+      `Prestations : ${prestationsSel.map((p) => p.label).join(" + ")}`,
       `Grade : ${grade.label} (${grade.roman})`,
       lastMinute ? "Quand : LAST MINUTE — aujourd'hui (+25 %)" : `Quand : ${quandTexte}`,
       `Zone : ${zone}${zoneEtendue ? " (zone étendue +50 MAD)" : ""}`,
@@ -219,8 +222,8 @@ export default function ReserverPage() {
             On vous trouve <em style={{ fontStyle: "italic", color: "#C4A882" }}>votre coiffeur.</em>
           </h1>
           <p className="text-white/50 text-sm leading-relaxed">
-            Vous recevez la confirmation sur WhatsApp dès qu&apos;un professionnel accepte —
-            sous 2 h, 30 minutes en Last Minute.
+            Vous êtes prévenu dès qu&apos;un coiffeur accepte — en quelques minutes,
+            10 minutes maximum.
           </p>
         </div>
       </div>
@@ -242,7 +245,7 @@ export default function ReserverPage() {
             Votre coiffeur, <em style={{ fontStyle: "italic", color: "#C4A882" }}>chez vous.</em>
           </h1>
           <p className="text-white/50 text-sm mt-6 max-w-xl leading-relaxed">
-            Confirmation en moins de 2 h — 30 minutes en Last Minute.
+            Un coiffeur vous répond en quelques minutes — 10 minutes maximum.
           </p>
           <p className="text-white/40 text-sm mt-3">
             {userId ? (
@@ -260,7 +263,10 @@ export default function ReserverPage() {
           <div className="flex flex-col gap-14">
             {/* 1. Prestation */}
             <div>
-              <SectionTitle n="01" title="Choisissez votre prestation" />
+              <SectionTitle n="01" title="Choisissez vos prestations" />
+              <p className="text-xs text-[#6B6B6B] -mt-3 mb-6">
+                Vous pouvez en sélectionner plusieurs — par exemple pour vous et un proche, en un seul rendez-vous.
+              </p>
               {(["Femmes", "Hommes & enfants"] as const).map((groupe) => (
                 <div key={groupe} className="mb-6">
                   <p className={`${labelCls} mb-3`} style={{ letterSpacing: "0.15em" }}>
@@ -269,24 +275,37 @@ export default function ReserverPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {prestationsV1
                       .filter((p) => p.groupe === groupe)
-                      .map((p) => (
-                        <button
-                          key={p.id}
-                          type="button"
-                          onClick={() => setPrestationId(p.id)}
-                          className={`text-left bg-white border px-5 py-4 transition-colors duration-300 ${
-                            prestationId === p.id ? "border-[#C4A882]" : "border-[#E8E4DF] hover:border-[#C4A882]/50"
-                          }`}
-                        >
-                          <div className="flex items-baseline justify-between gap-3">
-                            <span className="text-sm text-[#0A0A0A]">{p.label}</span>
-                            <span className="text-sm text-[#C4A882] whitespace-nowrap">
-                              dès {round5((p.base ?? 0) * 0.7)} MAD
-                            </span>
-                          </div>
-                          <span className="text-xs text-[#6B6B6B]">{p.duree}</span>
-                        </button>
-                      ))}
+                      .map((p) => {
+                        const choisi = prestationIds.includes(p.id);
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => togglePrestation(p.id)}
+                            aria-pressed={choisi}
+                            className={`text-left border px-5 py-4 transition-colors duration-300 ${
+                              choisi ? "border-[#C4A882] bg-[#C4A882]/10" : "bg-white border-[#E8E4DF] hover:border-[#C4A882]/50"
+                            }`}
+                          >
+                            <div className="flex items-baseline justify-between gap-3">
+                              <span className="text-sm text-[#0A0A0A] flex items-center gap-2">
+                                <span
+                                  className={`inline-flex h-4 w-4 items-center justify-center border text-[10px] ${
+                                    choisi ? "bg-[#C4A882] border-[#C4A882] text-white" : "border-[#C4A882]/40 text-transparent"
+                                  }`}
+                                >
+                                  ✓
+                                </span>
+                                {p.label}
+                              </span>
+                              <span className="text-sm text-[#C4A882] whitespace-nowrap">
+                                dès {round5((p.base ?? 0) * 0.7)} MAD
+                              </span>
+                            </div>
+                            <span className="text-xs text-[#6B6B6B] ml-6">{p.duree}</span>
+                          </button>
+                        );
+                      })}
                   </div>
                 </div>
               ))}
@@ -297,7 +316,7 @@ export default function ReserverPage() {
               <SectionTitle n="02" title="Sélectionnez le grade" />
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {grades.map((g) => {
-                  const prixGrade = prestation && prestation.base !== null ? round5(prestation.base * g.mult) : null;
+                  const prixGrade = prestationsSel.length > 0 ? round5(baseTotale * g.mult) : null;
                   return (
                     <button
                       key={g.id}
@@ -340,11 +359,11 @@ export default function ReserverPage() {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">⚡ Last Minute — aujourd&apos;hui, au plus vite</span>
+                  <span className="text-sm">Last Minute — aujourd&apos;hui, au plus vite</span>
                   <span className={`text-xs tracking-wider ${lastMinute ? "text-[#C4A882]" : "text-[#6B6B6B]"}`}>+25 %</span>
                 </div>
                 <p className={`text-xs mt-1 ${lastMinute ? "text-white/50" : "text-[#6B6B6B]"}`}>
-                  Confirmation en 30 minutes par le premier coiffeur disponible.
+                  Réponse en moins de 10 minutes par le premier coiffeur disponible.
                 </p>
               </button>
 
@@ -443,7 +462,7 @@ export default function ReserverPage() {
                 ))}
               </div>
               <p className="text-xs text-[#6B6B6B] mt-3">
-                L&apos;adresse exacte vous sera demandée sur WhatsApp après confirmation — elle n&apos;est jamais publiée.
+                L&apos;adresse exacte vous sera demandée après confirmation — elle n&apos;est jamais publiée.
               </p>
             </div>
 
@@ -516,8 +535,10 @@ export default function ReserverPage() {
               </p>
               <dl className="flex flex-col gap-3 text-sm">
                 <div className="flex justify-between gap-4">
-                  <dt className="text-white/40">Prestation</dt>
-                  <dd className="text-white text-right">{prestation?.label ?? "—"}</dd>
+                  <dt className="text-white/40">{prestationsSel.length > 1 ? "Prestations" : "Prestation"}</dt>
+                  <dd className="text-white text-right">
+                    {prestationsSel.length > 0 ? prestationsSel.map((p) => p.label).join(", ") : "—"}
+                  </dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-white/40">Grade</dt>
@@ -567,7 +588,7 @@ export default function ReserverPage() {
               </button>
               {statut === "erreur" && (
                 <p className="text-red-300/80 text-xs mt-4">
-                  Un souci est survenu. Réessayez, ou écrivez-nous sur WhatsApp.
+                  Un souci est survenu. Réessayez dans un instant.
                 </p>
               )}
               <p className="text-white/30 text-xs leading-relaxed mt-4">
