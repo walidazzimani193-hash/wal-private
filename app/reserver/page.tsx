@@ -125,8 +125,8 @@ export default function ReserverPage() {
     ? "last_minute"
     : `${date} · ${creneaux.find((c) => c.id === creneau)?.label}`;
 
-  // Last Minute = réservé aux membres : si non connecté, on bloque (soft) et on invite à créer un compte.
-  const lmBloque = lastMinute && !userId;
+  // Toute réservation exige un compte : si non connecté, on bloque (soft) et on invite à créer un compte.
+  const compteRequis = !userId;
 
   // Sauvegarde les choix puis envoie vers /compte ; au retour, restaurerBrouillon() reprend tout.
   const allerCreerCompte = () => {
@@ -146,7 +146,7 @@ export default function ReserverPage() {
 
   const envoyer = async () => {
     if (!valide || prestationsSel.length === 0 || !prix) return;
-    if (lmBloque) {
+    if (compteRequis) {
       allerCreerCompte();
       return;
     }
@@ -251,7 +251,7 @@ export default function ReserverPage() {
             {userId ? (
               <>Connecté ✓ — suivez vos demandes dans <a href="/compte" className="text-[#C4A882] underline underline-offset-4">votre espace</a>.</>
             ) : (
-              <>Avec un <a href="/compte" className="text-[#C4A882] underline underline-offset-4">compte</a> : le Last Minute, votre historique et la messagerie privée avec le coiffeur. Sinon, réservez directement ci-dessous.</>
+              <>La réservation se fait avec un <a href="/compte" className="text-[#C4A882] underline underline-offset-4">compte</a> (création en 10 secondes) — vous y gardez votre historique, la messagerie privée avec le coiffeur et l&apos;accès au Last Minute.</>
             )}
           </p>
         </div>
@@ -366,27 +366,6 @@ export default function ReserverPage() {
                   Réponse en moins de 10 minutes par le premier coiffeur disponible.
                 </p>
               </button>
-
-              {/* Last Minute réservé aux membres */}
-              {lmBloque && (
-                <div className="border border-[#C4A882]/40 bg-[#C4A882]/5 px-5 py-4 mb-4">
-                  <p className="text-sm text-[#0A0A0A]">
-                    Le Last Minute est réservé aux membres.
-                  </p>
-                  <p className="text-xs text-[#6B6B6B] mt-1 leading-relaxed">
-                    Créez votre compte en 10 secondes (lien magique ou Google) pour débloquer
-                    le Last Minute, votre historique et la messagerie privée avec le coiffeur.
-                    Vos choix sont conservés.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={allerCreerCompte}
-                    className="mt-3 bg-[#0A0A0A] text-white text-xs tracking-[0.2em] px-5 py-3 hover:bg-[#1a1a1a] transition-colors duration-300"
-                  >
-                    CRÉER MON COMPTE
-                  </button>
-                </div>
-              )}
 
               {/* Aucun coiffeur en ligne pour un Last Minute */}
               {lmIndispo && (
@@ -584,16 +563,24 @@ export default function ReserverPage() {
                     : "bg-white/10 text-white/30 cursor-not-allowed"
                 }`}
               >
-                {statut === "envoi" ? "ENVOI..." : lmBloque ? "CRÉER MON COMPTE" : "RÉSERVER"}
+                {statut === "envoi" ? "ENVOI..." : compteRequis ? "CRÉER MON COMPTE POUR RÉSERVER" : "RÉSERVER"}
               </button>
               {statut === "erreur" && (
                 <p className="text-red-300/80 text-xs mt-4">
                   Un souci est survenu. Réessayez dans un instant.
                 </p>
               )}
-              <p className="text-white/30 text-xs leading-relaxed mt-4">
-                Votre demande part au premier coiffeur disponible de votre zone. Annulation gratuite jusqu&apos;à 24 h avant.
-              </p>
+              {compteRequis ? (
+                <p className="text-white/40 text-xs leading-relaxed mt-4">
+                  La réservation se fait avec un compte — création en 10 secondes (lien magique ou Google).
+                  Vous y gardez votre historique, la messagerie privée avec le coiffeur et l&apos;accès au Last Minute.
+                  Vos choix sont conservés.
+                </p>
+              ) : (
+                <p className="text-white/30 text-xs leading-relaxed mt-4">
+                  Votre demande part au premier coiffeur disponible de votre zone. Annulation gratuite jusqu&apos;à 24 h avant.
+                </p>
+              )}
             </div>
           </aside>
         </div>
