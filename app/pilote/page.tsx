@@ -7,6 +7,16 @@ import { getSupabase, supabaseConfigured } from "@/lib/supabase";
 // Email autorisé à voir le dashboard (doit matcher la garde SQL stats_pilote)
 const ADMIN_EMAIL = "walidazzimani193@gmail.com";
 
+type Coiffeur = {
+  prenom: string;
+  grade: string;
+  en_ligne: boolean;
+  note: number | null;
+  courses: number;
+  ca: number;
+  acceptees: number;
+};
+
 type Stats = {
   reservations_total: number;
   en_attente: number;
@@ -21,6 +31,9 @@ type Stats = {
   coiffeurs_en_ligne: number;
   clients_total: number;
   messages_total: number;
+  delai_moyen_min: number;
+  taux_acceptation: number;
+  par_coiffeur: Coiffeur[];
 };
 
 // ── Feuille de route (mise à jour au fil du dev) ──
@@ -178,12 +191,22 @@ export default function PilotePage() {
         { label: "Annulées", valeur: String(stats.annulee) },
         { label: "CA réalisé", valeur: `${stats.ca_realise} MAD` },
         { label: "Commission WAL", valeur: `${stats.commission_wal} MAD`, accent: true },
+        { label: "Taux d'acceptation", valeur: `${stats.taux_acceptation} %`, accent: true },
+        { label: "Délai moyen d'accept.", valeur: `${stats.delai_moyen_min} min` },
         { label: "Coiffeurs en ligne", valeur: String(stats.coiffeurs_en_ligne) },
         { label: "Coiffeurs actifs", valeur: `${stats.coiffeurs_actifs} / ${stats.coiffeurs_total}` },
         { label: "Clients inscrits", valeur: String(stats.clients_total) },
         { label: "Messages échangés", valeur: String(stats.messages_total) },
       ]
     : [];
+
+  const grades: Record<string, string> = {
+    novice: "Novice",
+    confirme: "Confirmé",
+    expert: "Expert",
+    maitre: "Maître",
+  };
+  const parCoiffeur = stats?.par_coiffeur ?? [];
 
   return (
     <div className={wrap}>
@@ -216,6 +239,38 @@ export default function PilotePage() {
             </div>
           ))}
         </div>
+
+        {/* Détail par coiffeur */}
+        {parCoiffeur.length > 0 && (
+          <div className="mb-12">
+            <p className="text-white/40 text-xs tracking-[0.2em] mb-4">PAR COIFFEUR</p>
+            <div className="border border-white/10 overflow-hidden">
+              {/* En-tête */}
+              <div className="hidden md:grid grid-cols-[1.4fr_1fr_0.7fr_0.8fr_1fr] gap-2 px-4 py-3 bg-white/5 text-white/40 text-[11px] tracking-wide">
+                <span>Coiffeur</span>
+                <span className="text-center">Grade</span>
+                <span className="text-center">Courses</span>
+                <span className="text-center">Note</span>
+                <span className="text-right">CA généré</span>
+              </div>
+              {parCoiffeur.map((c, i) => (
+                <div
+                  key={`${c.prenom}-${i}`}
+                  className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_0.7fr_0.8fr_1fr] gap-2 px-4 py-3 border-t border-white/10 text-sm items-center"
+                >
+                  <span className="text-white flex items-center gap-2">
+                    <span style={{ color: c.en_ligne ? "#5BA87A" : "#4A4A4A" }} className="text-[10px]">●</span>
+                    {c.prenom}
+                  </span>
+                  <span className="text-white/50 text-xs md:text-center">{grades[c.grade] ?? c.grade}</span>
+                  <span className="text-white/70 md:text-center">{c.courses}</span>
+                  <span className="text-white/70 md:text-center">{c.note != null ? `${c.note}★` : "—"}</span>
+                  <span className="text-[#C4A882] text-right" style={serif}>{c.ca} MAD</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Feuille de route */}
         <p className="text-white/40 text-xs tracking-[0.2em] mb-4">FEUILLE DE ROUTE</p>
