@@ -104,7 +104,7 @@ export default function Chat({
       >
         <span>MESSAGERIE</span>
         {!ouvert && nonLus.length > 0 && (
-          <span className="w-2 h-2 rounded-full bg-[#C4A882] inline-block" aria-label="nouveaux messages" />
+          <span className="w-2 h-2 rounded-full bg-[#A9885A] inline-block" aria-label="nouveaux messages" />
         )}
         <span className="text-white/30">{ouvert ? "▲" : "▼"}</span>
       </button>
@@ -123,11 +123,11 @@ export default function Chat({
                   <div key={m.id} className={`flex ${mien ? "justify-end" : "justify-start"}`}>
                     <div
                       className={`max-w-[80%] px-3 py-2 text-sm ${
-                        mien ? "bg-[#C4A882] text-[#0A0A0A]" : "bg-white/10 text-white"
+                        mien ? "bg-[#A9885A] text-[#11241B]" : "bg-white/10 text-white"
                       }`}
                     >
                       <p className="leading-snug whitespace-pre-wrap break-words">{m.contenu}</p>
-                      <span className={`block text-[10px] mt-1 ${mien ? "text-[#0A0A0A]/50" : "text-white/40"}`}>
+                      <span className={`block text-[10px] mt-1 ${mien ? "text-[#11241B]/50" : "text-white/40"}`}>
                         {heure(m.created_at)}
                       </span>
                     </div>
@@ -139,7 +139,7 @@ export default function Chat({
           </div>
 
           {messages.some((m) => m.a_ete_masque) && (
-            <p className="text-[#C4A882]/70 text-[11px] mt-2">
+            <p className="text-[#A9885A]/70 text-[11px] mt-2">
               📵 Les numéros de téléphone sont masqués. Tout passe par WAL.
             </p>
           )}
@@ -151,12 +151,12 @@ export default function Chat({
                 onChange={(e) => setTexte(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && envoyer()}
                 placeholder="Votre message…"
-                className="flex-1 bg-white/5 border border-white/15 text-white px-3 py-2.5 text-sm outline-none focus:border-[#C4A882] transition-colors"
+                className="flex-1 bg-white/5 border border-white/15 text-white px-3 py-2.5 text-sm outline-none focus:border-[#A9885A] transition-colors"
               />
               <button
                 onClick={envoyer}
                 disabled={busy || !texte.trim()}
-                className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.15em] px-4 hover:bg-white transition-colors disabled:opacity-40"
+                className="bg-[#A9885A] text-[#11241B] text-xs tracking-[0.15em] px-4 hover:bg-white transition-colors disabled:opacity-40"
               >
                 ENVOYER
               </button>

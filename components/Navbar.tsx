@@ -2,193 +2,86 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 
-const navLinks = [
-  { href: "/coiffeurs", label: "Pour les coiffeurs" },
-  { href: "/clients", label: "Pour les clients" },
-  { href: "/a-propos", label: "À propos" },
-  { href: "/contact", label: "Contact" },
-];
+/** Sceau WAL — monogramme W dans un double cercle, laiton */
+function Seal() {
+  return (
+    <svg
+      width="30"
+      height="30"
+      viewBox="0 0 84 84"
+      fill="none"
+      className="transition-transform duration-[800ms] [transition-timing-function:var(--ease)] group-hover:rotate-180"
+    >
+      <circle cx="42" cy="42" r="40" stroke="#A9885A" strokeWidth="2" />
+      <circle cx="42" cy="42" r="33" stroke="#A9885A" strokeWidth="0.8" opacity="0.5" />
+      <text
+        x="42"
+        y="55"
+        textAnchor="middle"
+        fontFamily="Cormorant Garamond, serif"
+        fontSize="38"
+        fill="#A9885A"
+      >
+        W
+      </text>
+    </svg>
+  );
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-[#0A0A0A]/95 backdrop-blur-md py-4" : "bg-transparent py-6"
+    <header
+      className={`sticky top-0 z-50 -mb-[78px] transition-[background-color,backdrop-filter] duration-500 ${
+        scrolled ? "bg-[var(--nuit)]/95 backdrop-blur-md" : "bg-transparent"
       }`}
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex flex-col items-start group">
-          <span
-            className="text-white leading-none tracking-[0.06em]"
-            style={{
-              fontFamily: "var(--font-cormorant), Georgia, serif",
-              fontSize: "26px",
-              fontWeight: 500,
-              letterSpacing: "0.1em",
-            }}
-          >
-            WAL
-          </span>
-          <span
-            className="text-[#C4A882] tracking-[0.35em] leading-none"
-            style={{ fontSize: "9px", fontWeight: 400, letterSpacing: "0.35em" }}
-          >
-            PRIVATE
-          </span>
+      <nav
+        className={`mx-auto flex max-w-[1080px] items-center justify-between px-8 transition-[height] duration-500 [transition-timing-function:var(--ease)] ${
+          scrolled ? "h-[62px]" : "h-[78px]"
+        }`}
+      >
+        {/* Marque */}
+        <Link
+          href="/"
+          className="group flex items-center gap-[11px] tracking-[0.04em] text-[var(--ivoire)]"
+          style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "22px" }}
+        >
+          <Seal />
+          WAL <em className="italic text-[var(--laiton)]">Private</em>
         </Link>
 
-        {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-10">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="relative text-white/70 hover:text-white text-sm transition-colors duration-200 group"
-              style={{ fontSize: "13px", letterSpacing: "0.04em" }}
-            >
-              {label}
-              <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-[#C4A882] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA desktop */}
-        <div className="hidden md:flex items-center gap-4">
+        {/* Liens droite */}
+        <div className="flex items-center gap-[26px]">
+          <Link
+            href="/pro"
+            className="group relative hidden text-[12px] tracking-[0.12em] text-[var(--ivoire)] opacity-60 transition-opacity duration-300 hover:opacity-100 sm:block"
+          >
+            VOUS ÊTES COIFFEUR ?
+            <span className="absolute -bottom-1 left-0 h-px w-full origin-right scale-x-0 bg-[var(--laiton)] transition-transform duration-[400ms] [transition-timing-function:var(--ease)] group-hover:origin-left group-hover:scale-x-100" />
+          </Link>
           <Link
             href="/compte"
-            className="text-white/60 hover:text-white text-xs tracking-widest transition-colors duration-200"
-            style={{ letterSpacing: "0.12em" }}
+            className="hidden text-[12px] tracking-[0.12em] text-[var(--ivoire)] opacity-60 transition-opacity duration-300 hover:opacity-100 sm:block"
           >
             MON COMPTE
           </Link>
           <Link
-            href="/pro"
-            className="text-white/40 hover:text-white text-xs tracking-widest transition-colors duration-200"
-            style={{ letterSpacing: "0.12em" }}
-          >
-            PRO
-          </Link>
-          <Link
-            href="/coiffeurs"
-            className="text-white border border-[#C4A882] hover:bg-[#C4A882] hover:text-[#0A0A0A] px-5 py-2.5 text-xs tracking-widest transition-all duration-300"
-            style={{ letterSpacing: "0.15em" }}
-          >
-            REJOINDRE
-          </Link>
-          <Link
             href="/reserver"
-            className="bg-[#C4A882] text-[#0A0A0A] hover:bg-white px-5 py-2.5 text-xs tracking-widest transition-all duration-300"
-            style={{ letterSpacing: "0.15em" }}
+            className="bg-[var(--laiton)] px-[18px] py-2.5 text-[12px] font-semibold tracking-[0.12em] text-[var(--nuit)] transition-opacity duration-300 hover:opacity-85"
           >
             RÉSERVER
           </Link>
         </div>
-
-        {/* Burger mobile */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 p-1"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Menu"
-        >
-          <motion.span
-            className="block w-6 h-px bg-white origin-center"
-            animate={menuOpen ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }}
-            transition={{ duration: 0.3 }}
-          />
-          <motion.span
-            className="block w-6 h-px bg-white"
-            animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-            transition={{ duration: 0.3 }}
-          />
-          <motion.span
-            className="block w-6 h-px bg-white origin-center"
-            animate={menuOpen ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }}
-            transition={{ duration: 0.3 }}
-          />
-        </button>
       </nav>
-
-      {/* Menu mobile animé */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            className="md:hidden bg-[#0A0A0A] border-t border-white/10 px-6 py-8 flex flex-col gap-1 overflow-hidden"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            {navLinks.map(({ href, label }, i) => (
-              <motion.div
-                key={href}
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -16 }}
-                transition={{ delay: i * 0.06, duration: 0.35 }}
-              >
-                <Link
-                  href={href}
-                  className="block text-white/80 hover:text-white text-base py-3 border-b border-white/5 transition-colors duration-200"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {label}
-                </Link>
-              </motion.div>
-            ))}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0.25, duration: 0.35 }}
-              className="mt-4"
-            >
-              <Link
-                href="/reserver"
-                className="block text-center bg-[#C4A882] text-[#0A0A0A] hover:bg-white px-5 py-3 text-xs tracking-widest transition-all duration-300 mb-3"
-                onClick={() => setMenuOpen(false)}
-              >
-                RÉSERVER
-              </Link>
-              <Link
-                href="/coiffeurs"
-                className="block text-center text-white border border-[#C4A882] hover:bg-[#C4A882] hover:text-[#0A0A0A] px-5 py-3 text-xs tracking-widest transition-all duration-300"
-                onClick={() => setMenuOpen(false)}
-              >
-                REJOINDRE
-              </Link>
-              <Link
-                href="/compte"
-                className="block text-center text-white/60 hover:text-white px-5 py-3 text-xs tracking-widest transition-colors duration-200 mt-1"
-                onClick={() => setMenuOpen(false)}
-              >
-                MON COMPTE
-              </Link>
-              <Link
-                href="/pro"
-                className="block text-center text-white/40 hover:text-white px-5 py-3 text-xs tracking-widest transition-colors duration-200"
-                onClick={() => setMenuOpen(false)}
-              >
-                ESPACE COIFFEUR
-              </Link>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

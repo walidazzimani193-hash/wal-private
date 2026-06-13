@@ -1,277 +1,294 @@
-import Link from "next/link";
-import { HeroSection } from "@/components/sections/HeroSection";
-import { LastMinuteSection } from "@/components/sections/LastMinuteSection";
-import { FadeIn } from "@/components/motion/FadeIn";
-import { StaggerContainer, StaggerItem } from "@/components/motion/Stagger";
+"use client";
 
-const grades = [
-  {
-    label: "Novice",
-    desc: "Jeunes talents certifiés, tarifs accessibles.",
-    price: "150 – 300 MAD",
-    roman: "I",
-  },
-  {
-    label: "Confirmé",
-    desc: "Professionnels expérimentés, polyvalents.",
-    price: "300 – 600 MAD",
-    roman: "II",
-  },
-  {
-    label: "Expert",
-    desc: "Spécialistes reconnus, haute maîtrise technique.",
-    price: "600 – 1 000 MAD",
-    roman: "III",
-  },
-  {
-    label: "Maître",
-    desc: "Excellence absolue. Clientèle haut de gamme.",
-    price: "1 000 MAD +",
-    roman: "IV",
-  },
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { FadeIn } from "@/components/motion/FadeIn";
+import { Button } from "@/components/ui/Button";
+import { Marquee } from "@/components/ui/Marquee";
+import { GradeTabs, type Grade } from "@/components/ui/GradeTabs";
+import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
+
+const grades: Grade[] = [
+  { roman: "I", label: "Novice", min: 150, max: 300, desc: "Jeunes talents certifiés, accompagnés par un mentor WAL. Le bon geste, au tarif le plus accessible du cercle." },
+  { roman: "II", label: "Confirmé", min: 300, max: 600, desc: "Professionnels expérimentés et polyvalents, aux évaluations clients solides. Le choix le plus demandé." },
+  { roman: "III", label: "Expert", min: 600, max: 1000, desc: "Spécialistes reconnus, haute maîtrise technique. Pour une exigence précise — coupe signature, occasion particulière." },
+  { roman: "IV", label: "Maître", min: 1000, max: 0, desc: "Excellence absolue, sélection sur dossier. Le sommet du cercle WAL." },
 ];
 
 const steps = [
-  { n: "01", title: "Choisissez votre prestation", desc: "Coupe, couleur, brushing, soins — sélectionnez ce dont vous avez besoin." },
-  { n: "02", title: "Sélectionnez votre coiffeur", desc: "Parcourez les profils, les notes et les portfolios pour trouver votre expert idéal." },
-  { n: "03", title: "Réservez un créneau", desc: "Choisissez la date, l'heure et confirmez votre adresse à Marrakech." },
-  { n: "04", title: "Profitez à domicile", desc: "Votre coiffeur arrive équipé. Vous, vous vous détendez." },
+  { n: "01", title: "Choisissez", desc: "La prestation — ou plusieurs, pour vous et un proche — et le grade du coiffeur. Profils et évaluations en un coup d'œil." },
+  { n: "02", title: "Réservez", desc: "Date, heure, adresse. Le prix exact s'affiche avant de confirmer. Aucune surprise." },
+  { n: "03", title: "Profitez", desc: "Votre coiffeur arrive équipé, chez vous. Vous n'avez rien à préparer." },
 ];
+
+const marqueeItems = [
+  "COIFFEURS VÉRIFIÉS & CLASSÉS PAR GRADE",
+  "PRIX AFFICHÉS AVANT RÉSERVATION",
+  "SOIR, WEEK-END, VILLA, RIAD OU HÔTEL",
+  "MESSAGERIE PRIVÉE INCLUSE",
+  "MARRAKECH",
+];
+
+const exp = [
+  { label: "AMBIANCE", legende: "Coiffure à domicile" },
+  { label: "MÉTIER", legende: "Le coiffeur en action" },
+  { label: "RÉSULTAT", legende: "Le résultat final" },
+];
+
+const faq: AccordionItem[] = [
+  {
+    q: "Comment les coiffeurs sont-ils sélectionnés ?",
+    a: "Chaque coiffeur est retenu sur dossier, évalué lors d'une prestation test, puis noté par les clients après chaque rendez-vous. Son grade (I à IV) reflète ses compétences, ses certifications et ses évaluations — il évolue dans le temps.",
+  },
+  {
+    q: "Combien ça coûte ?",
+    a: "Le prix dépend du grade du coiffeur et des prestations choisies : de 150 MAD (Novice) à plus de 1 000 MAD (Maître). Le montant exact s'affiche avant la confirmation. Aucune majoration cachée.",
+  },
+  {
+    q: "Le Last Minute, comment ça marche ?",
+    a: "Votre demande part en temps réel aux coiffeurs en ligne de votre quartier — réponse en 10 minutes maximum. Réservé aux membres : il suffit d'un compte.",
+  },
+  {
+    q: "Faut-il un compte pour réserver ?",
+    a: "Oui — la création prend 10 secondes (lien magique ou connexion Google). Vous y gardez votre historique, la messagerie privée avec votre coiffeur et l'accès au Last Minute.",
+  },
+  {
+    q: "Comment se passe le paiement ?",
+    a: "Vous réglez directement votre coiffeur à la fin de la prestation, en espèces. Le paiement en ligne arrivera ensuite.",
+  },
+  {
+    q: "Quels quartiers de Marrakech sont couverts ?",
+    a: "Guéliz, Hivernage, la Palmeraie et la Médina (riads), et la zone s'étend avec le cercle. Hôtels et riads partenaires bienvenus.",
+  },
+  {
+    q: "Vous êtes coiffeur et souhaitez rejoindre WAL ?",
+    a: (
+      <>
+        Le cercle recrute à Marrakech. Vous choisissez vos horaires, votre zone et vos prestations ; WAL vous apporte les clients.{" "}
+        <Link href="/coiffeurs" className="font-semibold text-[var(--laiton-texte)]">
+          Candidater ici →
+        </Link>
+      </>
+    ),
+  },
+];
+
+function ImgPlaceholder({ label, legende, ratio }: { label: string; legende: string; ratio: string }) {
+  return (
+    <div
+      className="relative flex flex-col items-center justify-center gap-2 border border-[var(--ivoire)]/12 bg-[var(--ivoire)]/[0.04] text-[var(--ivoire)]/30"
+      style={{ aspectRatio: ratio }}
+    >
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+        <rect x="3" y="3" width="18" height="18" rx="1" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <polyline points="21 15 16 10 5 21" />
+      </svg>
+      <span className="text-[10px] tracking-[0.2em]">{legende.toUpperCase()}</span>
+      <span className="absolute bottom-4 left-4 text-[10px] tracking-[0.2em] opacity-50">{label}</span>
+    </div>
+  );
+}
+
+const SerifTitle = "var(--font-cormorant), Georgia, serif";
 
 export default function Home() {
   return (
     <div className="flex flex-col">
       {/* ── HERO ── */}
-      <HeroSection />
+      <header className="relative overflow-hidden bg-[linear-gradient(175deg,var(--nuit)_0%,#16301f_100%)] px-8 pt-44 pb-32 text-[var(--ivoire)]">
+        {/* sceau décoratif */}
+        <svg
+          className="pointer-events-none absolute -right-32 top-1/2 -mt-[310px] animate-[spin_140s_linear_infinite] opacity-[0.05]"
+          width="600" height="600" viewBox="0 0 84 84" fill="none"
+        >
+          <circle cx="42" cy="42" r="40" stroke="#F2EDE3" strokeWidth=".6" />
+          <circle cx="42" cy="42" r="33" stroke="#F2EDE3" strokeWidth=".3" />
+          <text x="42" y="55" textAnchor="middle" fontFamily="Cormorant Garamond, serif" fontSize="38" fill="#F2EDE3">W</text>
+        </svg>
 
-      {/* ── CONCEPT ── */}
-      <section className="bg-[#F8F5F0] py-28 px-6">
-        <div className="max-w-7xl mx-auto">
-          <FadeIn className="text-center mb-20">
-            <p className="sep text-[#C4A882] text-xs mb-6" style={{ letterSpacing: "0.3em" }}>
-              LE CONCEPT
-            </p>
-            <h2
-              className="text-[#0A0A0A] leading-tight"
-              style={{
-                fontFamily: "var(--font-cormorant), Georgia, serif",
-                fontSize: "clamp(36px, 5vw, 60px)",
-                fontWeight: 400,
-              }}
-            >
-              La beauté, sans compromis.
-              <br />
-              <em style={{ fontStyle: "italic", color: "#C4A882" }}>Chez vous.</em>
-            </h2>
+        <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-center gap-14 md:grid-cols-2">
+          <div>
+            <FadeIn>
+              <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">Marrakech</p>
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <h1 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(42px,6.5vw,76px)", lineHeight: 1.06 }}>
+                Votre coiffeur privé,
+                <br />
+                <em className="italic text-[var(--laiton)]">chez vous.</em>
+              </h1>
+            </FadeIn>
+            <FadeIn delay={0.2}>
+              <p className="mt-5 max-w-md text-[16.5px] leading-relaxed text-[var(--ivoire)]/75">
+                Professionnels vérifiés et classés, réservation instantanée, à l'heure et au lieu qui vous conviennent — villa, riad, hôtel.
+              </p>
+            </FadeIn>
+            <FadeIn delay={0.3}>
+              <div className="mt-9 flex flex-wrap items-center gap-4">
+                <Button href="/reserver" variant="laiton">RÉSERVER MAINTENANT</Button>
+                <Link
+                  href="/compte"
+                  className="border-b border-[var(--ivoire)]/25 pb-0.5 text-[12px] tracking-[0.1em] text-[var(--ivoire)]/60 transition-colors duration-300 hover:border-[var(--laiton)] hover:text-[var(--ivoire)]"
+                >
+                  MON COMPTE
+                </Link>
+              </div>
+            </FadeIn>
+          </div>
+
+          {/* visuel */}
+          <FadeIn delay={0.35} direction="left" className="relative hidden md:block">
+            <ImgPlaceholder label="1080 × 1350 · WebP" legende="Prestation à domicile" ratio="4 / 5" />
+            <span className="absolute -bottom-4 -left-4 bg-[var(--laiton)] px-4 py-3 text-[11px] font-semibold tracking-[0.18em] text-[var(--nuit)]">
+              RÉSERVATION OUVERTE
+            </span>
           </FadeIn>
-
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-1">
-            {[
-              {
-                title: "Des professionnels vérifiés",
-                desc: "Chaque coiffeur est sélectionné, formé et évalué. Aucune improvisation. Que de l'expertise.",
-              },
-              {
-                title: "À votre rythme",
-                desc: "Réservez le soir, le week-end, ou en last minute. WAL s'adapte à votre agenda, pas l'inverse.",
-              },
-              {
-                title: "Pour tous les budgets",
-                desc: "Du jeune talent au maître coiffeur — des tarifs transparents pour chaque profil et chaque envie.",
-              },
-            ].map((item) => (
-              <StaggerItem key={item.title}>
-                <div className="concept-card bg-white p-10 flex flex-col gap-5 group transition-all duration-500 cursor-default h-full">
-                  <span className="text-[#C4A882] text-2xl">—</span>
-                  <h3
-                    className="text-[#0A0A0A] group-hover:text-white transition-colors duration-500"
-                    style={{
-                      fontFamily: "var(--font-cormorant), Georgia, serif",
-                      fontSize: "26px",
-                      fontWeight: 400,
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p className="text-[#6B6B6B] group-hover:text-white/50 text-sm leading-relaxed transition-colors duration-500">
-                    {item.desc}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
         </div>
-      </section>
+      </header>
 
-      {/* ── COMMENT ÇA MARCHE ── */}
-      <section className="bg-white py-28 px-6">
-        <div className="max-w-5xl mx-auto">
-          <FadeIn className="text-center mb-20">
-            <p className="sep text-[#C4A882] text-xs mb-6" style={{ letterSpacing: "0.3em" }}>
-              COMMENT ÇA MARCHE
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--font-cormorant), Georgia, serif",
-                fontSize: "clamp(32px, 4vw, 52px)",
-                fontWeight: 400,
-              }}
-            >
-              Simple. Rapide. Élégant.
+      {/* ── MARQUEE ── */}
+      <Marquee items={marqueeItems} />
+
+      {/* ── ÉTAPES ── */}
+      <section className="px-8 py-24">
+        <div className="mx-auto max-w-[1080px]">
+          <FadeIn>
+            <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Comment ça marche</p>
+            <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
+              Trois gestes. <em className="italic">Pas un de plus.</em>
             </h2>
           </FadeIn>
-
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-[#E8E4DF]">
-            {steps.map((step) => (
-              <StaggerItem key={step.n}>
-                <div className="bg-white p-10 flex flex-col gap-4 h-full">
-                  <span
-                    className="text-[#C4A882]/40"
-                    style={{
-                      fontFamily: "var(--font-cormorant), Georgia, serif",
-                      fontSize: "52px",
-                      fontWeight: 300,
-                      lineHeight: 1,
-                    }}
-                  >
-                    {step.n}
-                  </span>
-                  <h3
-                    className="text-[#0A0A0A]"
-                    style={{
-                      fontFamily: "var(--font-cormorant), Georgia, serif",
-                      fontSize: "22px",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p className="text-[#6B6B6B] text-sm leading-relaxed">{step.desc}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* ── LES GRADES ── */}
-      <section className="bg-[#0A0A0A] py-28 px-6">
-        <div className="max-w-7xl mx-auto">
-          <FadeIn className="text-center mb-20">
-            <p className="sep text-[#C4A882]/60 text-xs mb-6" style={{ letterSpacing: "0.3em" }}>
-              NOS PROFESSIONNELS
-            </p>
-            <h2
-              className="text-white"
-              style={{
-                fontFamily: "var(--font-cormorant), Georgia, serif",
-                fontSize: "clamp(32px, 4vw, 56px)",
-                fontWeight: 400,
-              }}
-            >
-              Un grade pour chaque{" "}
-              <em style={{ fontStyle: "italic", color: "#C4A882" }}>niveau d&apos;excellence.</em>
-            </h2>
-            <p className="text-white/40 text-sm mt-4 max-w-xl mx-auto leading-relaxed">
-              Chaque coiffeur est évalué et classé selon ses compétences, ses certifications et les avis clients.
-            </p>
-          </FadeIn>
-
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/5">
-            {grades.map((grade) => (
-              <StaggerItem key={grade.label}>
-                <div className="grade-card bg-[#0A0A0A] border border-white/5 p-10 flex flex-col gap-5 group cursor-default h-full">
-                  <span
-                    className="text-[#C4A882]/20 group-hover:text-[#C4A882]/50 transition-colors duration-500"
-                    style={{
-                      fontFamily: "var(--font-cormorant), Georgia, serif",
-                      fontSize: "48px",
-                      fontWeight: 300,
-                      lineHeight: 1,
-                    }}
-                  >
-                    {grade.roman}
-                  </span>
-                  <h3
-                    className="text-white"
-                    style={{
-                      fontFamily: "var(--font-cormorant), Georgia, serif",
-                      fontSize: "24px",
-                      fontWeight: 400,
-                    }}
-                  >
-                    {grade.label}
-                  </h3>
-                  <p className="text-white/40 text-sm leading-relaxed flex-1">{grade.desc}</p>
-                  <div className="pt-4 border-t border-white/10">
-                    <span className="text-[#C4A882] text-xs" style={{ letterSpacing: "0.1em" }}>
-                      {grade.price}
-                    </span>
+          <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
+            {steps.map((s, i) => (
+              <FadeIn key={s.n} delay={0.1 + i * 0.1}>
+                <div className="group h-full border border-[var(--vert)]/14 bg-transparent p-8 transition-all duration-500 [transition-timing-function:var(--ease)] hover:-translate-y-1.5 hover:border-transparent hover:bg-white hover:shadow-[0_24px_50px_-28px_rgba(17,36,27,0.35)]">
+                  <div className="mb-3.5 leading-none text-[var(--laiton-texte)] transition-transform duration-500 [transition-timing-function:var(--ease)] group-hover:translate-x-1.5" style={{ fontFamily: SerifTitle, fontSize: "42px" }}>
+                    {s.n}
                   </div>
+                  <h3 className="mb-1.5 text-[15.5px] font-semibold">{s.title}</h3>
+                  <p className="text-[13.5px] text-[var(--vert)]/70">{s.desc}</p>
                 </div>
-              </StaggerItem>
+              </FadeIn>
             ))}
-          </StaggerContainer>
+          </div>
         </div>
       </section>
 
-      {/* ── LAST MINUTE ── */}
-      <LastMinuteSection />
-
-      {/* ── DOUBLE CTA ── */}
-      <section className="grid grid-cols-1 md:grid-cols-2">
-        <FadeIn direction="right" className="bg-[#0A0A0A] px-10 md:px-16 py-24 flex flex-col justify-between gap-10">
-          <div className="flex flex-col gap-5">
-            <p className="text-[#C4A882]/60 text-xs tracking-[0.3em]">VOUS ÊTES COIFFEUR</p>
-            <h3
-              className="text-white leading-tight"
-              style={{
-                fontFamily: "var(--font-cormorant), Georgia, serif",
-                fontSize: "clamp(28px, 3.5vw, 46px)",
-                fontWeight: 400,
-              }}
-            >
-              Développez votre clientèle.{" "}
-              <em style={{ fontStyle: "italic", color: "#C4A882" }}>Librement.</em>
-            </h3>
-            <p className="text-white/40 text-sm leading-relaxed max-w-sm">
-              Rejoignez WAL Private et accédez à une nouvelle source de revenus. Vous choisissez vos horaires, vos prestations, votre zone de travail.
-            </p>
-          </div>
-          <Link
-            href="/coiffeurs"
-            className="self-start px-7 py-3.5 bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] hover:bg-[#D4B896] transition-colors duration-300"
-          >
-            REJOINDRE LA TEAM
-          </Link>
-        </FadeIn>
-
-        <FadeIn direction="left" delay={0.1} className="bg-[#C4A882] px-10 md:px-16 py-24 flex flex-col justify-between gap-10">
-          <div className="flex flex-col gap-5">
-            <p className="text-[#0A0A0A]/50 text-xs tracking-[0.3em]">VOUS ÊTES CLIENT</p>
-            <h3
-              className="text-[#0A0A0A] leading-tight"
-              style={{
-                fontFamily: "var(--font-cormorant), Georgia, serif",
-                fontSize: "clamp(28px, 3.5vw, 46px)",
-                fontWeight: 400,
-              }}
-            >
-              Votre coiffeur privé,{" "}
-              <em style={{ fontStyle: "italic" }}>chez vous.</em>
-            </h3>
-            <p className="text-[#0A0A0A]/60 text-sm leading-relaxed max-w-sm">
-              Découvrez une nouvelle façon de prendre soin de vous. Inscrivez-vous à la liste d&apos;attente et soyez parmi les premiers à profiter du service à Marrakech.
-            </p>
-          </div>
-          <Link
-            href="/clients"
-            className="self-start px-7 py-3.5 bg-[#0A0A0A] text-white text-xs tracking-[0.2em] hover:bg-[#1a1a1a] transition-colors duration-300"
-          >
-            LISTE D&apos;ATTENTE
-          </Link>
-        </FadeIn>
+      {/* ── GRADES ── */}
+      <section className="bg-[var(--vert)] px-8 py-24 text-[var(--ivoire)]">
+        <div className="mx-auto max-w-[1080px]">
+          <FadeIn>
+            <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">Nos professionnels</p>
+            <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
+              Un grade pour chaque <em className="italic text-[var(--laiton)]">niveau d'excellence.</em>
+            </h2>
+          </FadeIn>
+          <FadeIn delay={0.15}>
+            <GradeTabs grades={grades} defaultIndex={1} />
+          </FadeIn>
+          <FadeIn delay={0.25}>
+            <div className="mt-12">
+              <Button href="/reserver" variant="laiton">RÉSERVER UN COIFFEUR</Button>
+            </div>
+          </FadeIn>
+        </div>
       </section>
+
+      {/* ── LAST MINUTE (atout + levier compte) ── */}
+      <section className="px-8 py-24">
+        <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-center gap-14 md:grid-cols-2">
+          <FadeIn>
+            <ImgPlaceholderLight />
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Last Minute</p>
+            <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
+              Un coiffeur, <em className="italic text-[var(--laiton-texte)]">maintenant.</em>
+            </h2>
+            <p className="mt-5 max-w-md text-[15px] leading-relaxed text-[var(--vert)]/75">
+              Besoin d'un coiffeur en express ? Votre demande part en temps réel aux professionnels
+              en ligne de votre quartier — réponse en <strong className="font-semibold">10 minutes maximum</strong>.
+            </p>
+            <p className="mt-3 text-[13px] text-[var(--vert)]/55">
+              Réservé aux membres — la création de compte prend 10 secondes.
+            </p>
+            <div className="mt-7">
+              <Button href="/reserver" variant="vert">RÉSERVER EN LAST MINUTE</Button>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── EXPÉRIENCE (visuels) ── */}
+      <section className="bg-[var(--nuit)] px-8 py-24 text-[var(--ivoire)]">
+        <div className="mx-auto max-w-[1080px]">
+          <FadeIn>
+            <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">L'expérience WAL</p>
+            <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
+              Le soin qui se <em className="italic text-[var(--laiton)]">déplace.</em>
+            </h2>
+          </FadeIn>
+          <div className="mt-12 grid grid-cols-1 gap-2 md:grid-cols-3">
+            {exp.map((e, i) => (
+              <FadeIn key={e.label} delay={0.1 + i * 0.1}>
+                <ImgPlaceholder label={e.label} legende={e.legende} ratio="3 / 4" />
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="px-8 py-24">
+        <div className="mx-auto max-w-[1080px]">
+          <FadeIn>
+            <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Questions</p>
+            <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
+              Tout ce qu'il faut savoir. <em className="italic">Quand vous voulez.</em>
+            </h2>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <Accordion items={faq} className="mt-6" />
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── CTA FINALE ── */}
+      <section className="relative overflow-hidden bg-[var(--nuit)] px-8 py-28 text-center text-[var(--ivoire)]">
+        <div className="mx-auto max-w-[1080px]">
+          <FadeIn>
+            <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">Rejoindre le cercle</p>
+            <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(30px,4.5vw,46px)", lineHeight: 1.1 }}>
+              Votre prochaine <em className="italic text-[var(--laiton)]">prestation,</em> chez vous.
+            </h2>
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+              <Button href="/reserver" variant="laiton">RÉSERVER MAINTENANT</Button>
+              <Button href="/compte" variant="outline">MON COMPTE</Button>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/* Placeholder image sur fond clair (section Last Minute) */
+function ImgPlaceholderLight() {
+  return (
+    <div
+      className="relative flex flex-col items-center justify-center gap-2 border border-[var(--vert)]/12 bg-[var(--vert)]/[0.04] text-[var(--vert)]/30"
+      style={{ aspectRatio: "4 / 5" }}
+    >
+      <motion.svg
+        width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"
+        initial={{ opacity: 0.3 }} animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity }}
+      >
+        <rect x="3" y="3" width="18" height="18" rx="1" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <polyline points="21 15 16 10 5 21" />
+      </motion.svg>
+      <span className="text-[10px] tracking-[0.2em]">LAST MINUTE — EXPRESS</span>
     </div>
   );
 }

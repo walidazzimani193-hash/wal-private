@@ -2,9 +2,9 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="bg-[#0A0A0A] pt-36 pb-24 px-6">
+      <section className="bg-[#11241B] pt-36 pb-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <p className="sep text-[#C4A882]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
+          <p className="sep text-[#A9885A]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
             CONTACT
           </p>
           <h1
@@ -17,13 +17,13 @@ export default function ContactPage() {
           >
             Parlons de
             <br />
-            <em style={{ fontStyle: "italic", color: "#C4A882" }}>votre projet.</em>
+            <em style={{ fontStyle: "italic", color: "#A9885A" }}>votre projet.</em>
           </h1>
         </div>
       </section>
 
       {/* Formulaire + infos */}
-      <section className="bg-[#F8F5F0] py-28 px-6">
+      <section className="bg-[#F2EDE3] py-28 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
           {/* Formulaire */}
           <div>
@@ -43,13 +43,13 @@ export default function ContactPage() {
                 <label className="text-xs tracking-widest text-[#6B6B6B]" style={{ letterSpacing: "0.15em" }}>VOUS ÊTES</label>
                 <div className="grid grid-cols-2 gap-3">
                   {["Un coiffeur", "Un client"].map((opt) => (
-                    <label key={opt} className="flex items-center gap-3 bg-white border border-[#E8E4DF] px-4 py-3 cursor-pointer hover:border-[#C4A882] transition-colors group">
+                    <label key={opt} className="flex items-center gap-3 bg-white border border-[#E3DCC9] px-4 py-3 cursor-pointer hover:border-[#A9885A] transition-colors group">
                       <input
                         type="radio"
                         name="type"
-                        className="accent-[#C4A882]"
+                        className="accent-[#A9885A]"
                       />
-                      <span className="text-sm text-[#6B6B6B] group-hover:text-[#0A0A0A] transition-colors">{opt}</span>
+                      <span className="text-sm text-[#6B6B6B] group-hover:text-[#11241B] transition-colors">{opt}</span>
                     </label>
                   ))}
                 </div>
@@ -61,7 +61,7 @@ export default function ContactPage() {
                   <input
                     type="text"
                     placeholder="Votre prénom"
-                    className="bg-white border border-[#E8E4DF] px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors"
+                    className="bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -69,7 +69,7 @@ export default function ContactPage() {
                   <input
                     type="text"
                     placeholder="Votre nom"
-                    className="bg-white border border-[#E8E4DF] px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors"
+                    className="bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors"
                   />
                 </div>
               </div>
@@ -79,7 +79,7 @@ export default function ContactPage() {
                 <input
                   type="email"
                   placeholder="votre@email.com"
-                  className="bg-white border border-[#E8E4DF] px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors"
+                  className="bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors"
                 />
               </div>
 
@@ -88,7 +88,7 @@ export default function ContactPage() {
                 <input
                   type="tel"
                   placeholder="+212 6 XX XX XX XX"
-                  className="bg-white border border-[#E8E4DF] px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors"
+                  className="bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors"
                 />
               </div>
 
@@ -97,13 +97,13 @@ export default function ContactPage() {
                 <textarea
                   rows={5}
                   placeholder="Dites-nous comment nous pouvons vous aider..."
-                  className="bg-white border border-[#E8E4DF] px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors resize-none"
+                  className="bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors resize-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="bg-[#0A0A0A] text-white text-xs tracking-[0.2em] py-4 mt-2 hover:bg-[#C4A882] hover:text-[#0A0A0A] transition-colors duration-300"
+                className="bg-[#11241B] text-white text-xs tracking-[0.2em] py-4 mt-2 hover:bg-[#A9885A] hover:text-[#11241B] transition-colors duration-300"
               >
                 ENVOYER LE MESSAGE
               </button>
@@ -143,14 +143,14 @@ export default function ContactPage() {
                     value: "Instagram · Facebook",
                   },
                 ].map((info) => (
-                  <div key={info.label} className="flex flex-col gap-2 pb-8 border-b border-[#E8E4DF]">
-                    <p className="text-xs tracking-widest text-[#C4A882]" style={{ letterSpacing: "0.2em" }}>{info.label}</p>
+                  <div key={info.label} className="flex flex-col gap-2 pb-8 border-b border-[#E3DCC9]">
+                    <p className="text-xs tracking-widest text-[#A9885A]" style={{ letterSpacing: "0.2em" }}>{info.label}</p>
                     {info.href ? (
-                      <a href={info.href} className="text-[#0A0A0A] hover:text-[#C4A882] transition-colors text-sm">
+                      <a href={info.href} className="text-[#11241B] hover:text-[#A9885A] transition-colors text-sm">
                         {info.value}
                       </a>
                     ) : (
-                      <p className="text-[#0A0A0A] text-sm">{info.value}</p>
+                      <p className="text-[#11241B] text-sm">{info.value}</p>
                     )}
                   </div>
                 ))}
@@ -158,7 +158,7 @@ export default function ContactPage() {
             </div>
 
             {/* Note */}
-            <div className="bg-[#0A0A0A] p-8">
+            <div className="bg-[#11241B] p-8">
               <p
                 className="text-white/60 leading-relaxed"
                 style={{

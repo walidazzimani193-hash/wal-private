@@ -1,88 +1,49 @@
 import Link from "next/link";
 
+const liens = [
+  { href: "/reserver", label: "Réserver" },
+  { href: "/compte", label: "Mon compte" },
+  { href: "/coiffeurs", label: "Pour les coiffeurs" },
+  { href: "/pro", label: "Espace coiffeur" },
+  { href: "/a-propos", label: "À propos" },
+];
+
 export default function Footer() {
   return (
-    <footer className="bg-[#0A0A0A] text-white/60">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Brand */}
-          <div className="flex flex-col gap-4">
-            <div>
-              <p
-                className="text-white tracking-widest"
-                style={{
-                  fontFamily: "var(--font-cormorant), Georgia, serif",
-                  fontSize: "22px",
-                  fontWeight: 500,
-                  letterSpacing: "0.1em",
-                }}
-              >
-                WAL
-              </p>
-              <p
-                className="text-[#C4A882] tracking-[0.35em]"
-                style={{ fontSize: "9px", letterSpacing: "0.35em" }}
-              >
-                PRIVATE
-              </p>
-            </div>
-            <p className="text-white/40 text-sm leading-relaxed max-w-xs">
-              La beauté privée à votre porte. Marrakech.
+    <footer className="border-t border-[var(--ivoire)]/10 bg-[var(--nuit)] text-[var(--ivoire)]">
+      <div className="mx-auto max-w-[1080px] px-8 py-14">
+        <div className="flex flex-col justify-between gap-10 md:flex-row md:items-start">
+          {/* Marque */}
+          <div className="flex flex-col gap-3">
+            <p
+              className="tracking-[0.04em]"
+              style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "22px" }}
+            >
+              WAL <em className="italic text-[var(--laiton)]">Private</em>
+            </p>
+            <p className="max-w-xs text-sm leading-relaxed opacity-50">
+              Le cercle privé du coiffeur à domicile. Marrakech.
             </p>
           </div>
 
           {/* Navigation */}
-          <div className="flex flex-col gap-4">
-            <p className="text-white/30 text-xs tracking-widest uppercase mb-1">Navigation</p>
-            {[
-              { href: "/coiffeurs", label: "Pour les coiffeurs" },
-              { href: "/clients", label: "Pour les clients" },
-              { href: "/a-propos", label: "À propos" },
-              { href: "/contact", label: "Contact" },
-              { href: "/pro", label: "Espace coiffeur — connexion" },
-            ].map(({ href, label }) => (
+          <nav className="flex flex-wrap gap-x-8 gap-y-3">
+            {liens.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
-                className="text-white/50 hover:text-white text-sm transition-colors duration-200"
+                className="text-sm opacity-60 transition-opacity duration-300 hover:opacity-100"
               >
                 {label}
               </Link>
             ))}
-          </div>
-
-          {/* Contact */}
-          <div className="flex flex-col gap-4">
-            <p className="text-white/30 text-xs tracking-widest uppercase mb-1">Contact</p>
-            <p className="text-sm text-white/50">Marrakech, Maroc</p>
-            <a
-              href="mailto:contact@walprivate.ma"
-              className="text-sm text-white/50 hover:text-[#C4A882] transition-colors duration-200"
-            >
-              contact@walprivate.ma
-            </a>
-            {/* Social */}
-            <div className="flex gap-4 mt-2">
-              {["Instagram", "Facebook"].map((s) => (
-                <a
-                  key={s}
-                  href="#"
-                  className="text-xs tracking-widest text-white/30 hover:text-[#C4A882] transition-colors duration-200 uppercase"
-                >
-                  {s}
-                </a>
-              ))}
-            </div>
-          </div>
+          </nav>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-white/25 text-xs tracking-wide">
-            © {new Date().getFullYear()} WAL Private. Tous droits réservés.
-          </p>
-          <p className="text-white/25 text-xs tracking-wide">
-            Marrakech — Maroc
+        {/* Bas de page */}
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-[var(--ivoire)]/10 pt-8 sm:flex-row">
+          <p className="text-xs tracking-[0.1em] opacity-35">
+            © {new Date().getFullYear()} WAL PRIVATE — MARRAKECH
           </p>
         </div>
       </div>

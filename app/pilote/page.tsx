@@ -54,11 +54,11 @@ const roadmap: { etat: Etat; titre: string }[] = [
 
 const etatStyle: Record<Etat, { txt: string; color: string; dot: string }> = {
   fait: { txt: "Fait", color: "#5BA87A", dot: "●" },
-  encours: { txt: "En cours", color: "#C4A882", dot: "◐" },
+  encours: { txt: "En cours", color: "#A9885A", dot: "◐" },
   afaire: { txt: "À faire", color: "#6B6B6B", dot: "○" },
 };
 
-const wrap = "bg-[#0A0A0A] min-h-screen px-6 pt-28 pb-16";
+const wrap = "bg-[#11241B] min-h-screen px-6 pt-28 pb-16";
 const serif = { fontFamily: "var(--font-cormorant), Georgia, serif" };
 
 export default function PilotePage() {
@@ -147,13 +147,13 @@ export default function PilotePage() {
     return (
       <div className={`${wrap} flex items-center justify-center`}>
         <div className="w-full max-w-sm text-center">
-          <p className="text-[#C4A882]/60 text-xs tracking-[0.3em] mb-6">TABLEAU DE BORD</p>
+          <p className="text-[#A9885A]/60 text-xs tracking-[0.3em] mb-6">TABLEAU DE BORD</p>
           <h1 className="text-white mb-8" style={{ ...serif, fontSize: "32px", fontWeight: 300 }}>
             Accès administrateur
           </h1>
           <button
             onClick={connexionGoogle}
-            className="w-full bg-white text-[#0A0A0A] text-sm py-3.5 flex items-center justify-center gap-3 hover:bg-white/90 transition-colors"
+            className="w-full bg-white text-[#11241B] text-sm py-3.5 flex items-center justify-center gap-3 hover:bg-white/90 transition-colors"
           >
             <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 4.75c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.46 14.97.5 12 .5A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 4.75 12 4.75z"/></svg>
             Se connecter
@@ -172,7 +172,7 @@ export default function PilotePage() {
             Accès réservé
           </h1>
           <p className="text-white/40 text-sm mb-8">Cette page est réservée à l&apos;administrateur WAL.</p>
-          <button onClick={seDeconnecter} className="text-[#C4A882] text-xs tracking-widest">
+          <button onClick={seDeconnecter} className="text-[#A9885A] text-xs tracking-widest">
             SE DÉCONNECTER
           </button>
         </div>
@@ -214,7 +214,7 @@ export default function PilotePage() {
         {/* En-tête */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <p className="text-[#C4A882]/60 text-xs tracking-[0.3em] mb-1">TABLEAU DE BORD · PILOTE</p>
+            <p className="text-[#A9885A]/60 text-xs tracking-[0.3em] mb-1">TABLEAU DE BORD · PILOTE</p>
             <h1 className="text-white" style={{ ...serif, fontSize: "30px", fontWeight: 400 }}>
               WAL Private
             </h1>
@@ -230,10 +230,10 @@ export default function PilotePage() {
           {cartes.map((c) => (
             <div
               key={c.label}
-              className={`border p-5 ${c.accent ? "bg-[#C4A882]/10 border-[#C4A882]/40" : "bg-white/5 border-white/10"}`}
+              className={`border p-5 ${c.accent ? "bg-[#A9885A]/10 border-[#A9885A]/40" : "bg-white/5 border-white/10"}`}
             >
               <p className="text-white/40 text-[11px] tracking-wide mb-2 leading-tight">{c.label}</p>
-              <p className={`${c.accent ? "text-[#C4A882]" : "text-white"}`} style={{ ...serif, fontSize: "28px", fontWeight: 400 }}>
+              <p className={`${c.accent ? "text-[#A9885A]" : "text-white"}`} style={{ ...serif, fontSize: "28px", fontWeight: 400 }}>
                 {c.valeur}
               </p>
             </div>
@@ -265,7 +265,7 @@ export default function PilotePage() {
                   <span className="text-white/50 text-xs md:text-center">{grades[c.grade] ?? c.grade}</span>
                   <span className="text-white/70 md:text-center">{c.courses}</span>
                   <span className="text-white/70 md:text-center">{c.note != null ? `${c.note}★` : "—"}</span>
-                  <span className="text-[#C4A882] text-right" style={serif}>{c.ca} MAD</span>
+                  <span className="text-[#A9885A] text-right" style={serif}>{c.ca} MAD</span>
                 </div>
               ))}
             </div>

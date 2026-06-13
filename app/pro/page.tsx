@@ -153,14 +153,14 @@ export default function ProPage() {
     chargerReservations(coiffeur);
   };
 
-  const wrap = "bg-[#0A0A0A] min-h-screen px-6 pt-28 pb-16";
+  const wrap = "bg-[#11241B] min-h-screen px-6 pt-28 pb-16";
 
   // ── Plateforme non configurée ──
   if (!supabaseConfigured) {
     return (
       <div className={`${wrap} flex items-center justify-center`}>
         <div className="max-w-md text-center">
-          <p className="sep text-[#C4A882]/60 text-xs mb-6 justify-center" style={{ letterSpacing: "0.3em" }}>
+          <p className="sep text-[#A9885A]/60 text-xs mb-6 justify-center" style={{ letterSpacing: "0.3em" }}>
             ESPACE COIFFEUR
           </p>
           <h1 className="text-white mb-4" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "32px", fontWeight: 300 }}>
@@ -185,7 +185,7 @@ export default function ProPage() {
     return (
       <div className={`${wrap} flex items-center justify-center`}>
         <div className="w-full max-w-sm">
-          <p className="sep text-[#C4A882]/60 text-xs mb-6 justify-center" style={{ letterSpacing: "0.3em" }}>
+          <p className="sep text-[#A9885A]/60 text-xs mb-6 justify-center" style={{ letterSpacing: "0.3em" }}>
             ESPACE COIFFEUR
           </p>
           <h1 className="text-white text-center mb-8" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "34px", fontWeight: 300 }}>
@@ -197,7 +197,7 @@ export default function ProPage() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-white/5 border border-white/15 text-white px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors"
+              className="bg-white/5 border border-white/15 text-white px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors"
             />
             <input
               type="password"
@@ -205,19 +205,19 @@ export default function ProPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && seConnecter()}
-              className="bg-white/5 border border-white/15 text-white px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors"
+              className="bg-white/5 border border-white/15 text-white px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors"
             />
             {loginError && <p className="text-red-300/80 text-xs">{loginError}</p>}
             <button
               onClick={seConnecter}
               disabled={busy || !email || !password}
-              className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-4 mt-2 hover:bg-white transition-colors disabled:opacity-40"
+              className="bg-[#A9885A] text-[#11241B] text-xs tracking-[0.2em] py-4 mt-2 hover:bg-white transition-colors disabled:opacity-40"
             >
               {busy ? "CONNEXION..." : "SE CONNECTER"}
             </button>
             <p className="text-white/30 text-xs text-center mt-2">
               Votre compte est créé par l&apos;équipe WAL. Pas encore des nôtres ?{" "}
-              <a href="/coiffeurs" className="text-[#C4A882]">Rejoindre</a>.
+              <a href="/coiffeurs" className="text-[#A9885A]">Rejoindre</a>.
             </p>
           </div>
         </div>
@@ -236,7 +236,7 @@ export default function ProPage() {
           <p className="text-white/40 text-sm mb-8">
             Votre profil est en attente d&apos;activation par l&apos;équipe WAL. Vous serez prévenu dès qu&apos;il est prêt.
           </p>
-          <button onClick={seDeconnecter} className="text-[#C4A882] text-xs tracking-widest">
+          <button onClick={seDeconnecter} className="text-[#A9885A] text-xs tracking-widest">
             SE DÉCONNECTER
           </button>
         </div>
@@ -251,7 +251,7 @@ export default function ProPage() {
         {/* En-tête */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <p className="text-[#C4A882]/60 text-xs tracking-[0.3em] mb-1">ESPACE COIFFEUR</p>
+            <p className="text-[#A9885A]/60 text-xs tracking-[0.3em] mb-1">ESPACE COIFFEUR</p>
             <h1 className="text-white" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "30px", fontWeight: 400 }}>
               Bonjour {coiffeur.prenom}
             </h1>
@@ -268,7 +268,7 @@ export default function ProPage() {
         <button
           onClick={toggleEnLigne}
           className={`w-full border px-6 py-5 mb-10 flex items-center justify-between transition-colors duration-300 ${
-            coiffeur.en_ligne ? "bg-[#C4A882] border-[#C4A882] text-[#0A0A0A]" : "bg-white/5 border-white/15 text-white"
+            coiffeur.en_ligne ? "bg-[#A9885A] border-[#A9885A] text-[#11241B]" : "bg-white/5 border-white/15 text-white"
           }`}
         >
           <span className="text-sm">
@@ -276,7 +276,7 @@ export default function ProPage() {
           </span>
           <span
             className={`text-xs tracking-[0.2em] px-3 py-1.5 ${
-              coiffeur.en_ligne ? "bg-[#0A0A0A] text-[#C4A882]" : "bg-white/10 text-white/60"
+              coiffeur.en_ligne ? "bg-[#11241B] text-[#A9885A]" : "bg-white/10 text-white/60"
             }`}
           >
             {coiffeur.en_ligne ? "EN LIGNE" : "PASSER EN LIGNE"}
@@ -289,10 +289,10 @@ export default function ProPage() {
             <p className="text-white/40 text-xs tracking-[0.2em] mb-4">MES COURSES</p>
             <div className="flex flex-col gap-3">
               {mesCourses.map((r) => (
-                <div key={r.id} className="bg-white/5 border border-[#C4A882]/30 p-5">
+                <div key={r.id} className="bg-white/5 border border-[#A9885A]/30 p-5">
                   <div className="flex items-baseline justify-between mb-2">
                     <span className="text-white text-sm">{r.prestation_label}</span>
-                    <span className="text-[#C4A882] text-sm">{partPro(r.prix, r.grade)} MAD pour vous</span>
+                    <span className="text-[#A9885A] text-sm">{partPro(r.prix, r.grade)} MAD pour vous</span>
                   </div>
                   <p className="text-white/40 text-xs mb-1">
                     {r.client_prenom} · {r.zone} · {r.quand === "last_minute" ? "Last Minute" : r.quand}
@@ -303,7 +303,7 @@ export default function ProPage() {
                   {r.notes && <p className="text-white/40 text-xs italic mb-4">« {r.notes} »</p>}
                   <button
                     onClick={() => terminer(r.id)}
-                    className="bg-white/10 hover:bg-[#C4A882] hover:text-[#0A0A0A] text-white text-xs tracking-[0.15em] px-5 py-2.5 transition-colors"
+                    className="bg-white/10 hover:bg-[#A9885A] hover:text-[#11241B] text-white text-xs tracking-[0.15em] px-5 py-2.5 transition-colors"
                   >
                     MARQUER TERMINÉ
                   </button>
@@ -344,10 +344,10 @@ export default function ProPage() {
           ) : (
             <div className="flex flex-col gap-3">
               {demandes.map((r) => (
-                <div key={r.id} className="bg-white/5 border border-white/15 p-5 hover:border-[#C4A882]/40 transition-colors">
+                <div key={r.id} className="bg-white/5 border border-white/15 p-5 hover:border-[#A9885A]/40 transition-colors">
                   <div className="flex items-baseline justify-between mb-2">
                     <span className="text-white text-sm">{r.prestation_label}</span>
-                    <span className="text-[#C4A882] text-sm">{partPro(r.prix, r.grade)} MAD pour vous</span>
+                    <span className="text-[#A9885A] text-sm">{partPro(r.prix, r.grade)} MAD pour vous</span>
                   </div>
                   <p className="text-white/40 text-xs mb-1">
                     {r.zone} · {r.quand === "last_minute" ? "⚡ Last Minute" : r.quand} · {gradeLabel(r.grade)}
@@ -355,7 +355,7 @@ export default function ProPage() {
                   {r.notes && <p className="text-white/40 text-xs italic mb-3">« {r.notes} »</p>}
                   <button
                     onClick={() => accepter(r.id)}
-                    className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.15em] px-6 py-2.5 mt-2 hover:bg-white transition-colors"
+                    className="bg-[#A9885A] text-[#11241B] text-xs tracking-[0.15em] px-6 py-2.5 mt-2 hover:bg-white transition-colors"
                   >
                     ACCEPTER
                   </button>

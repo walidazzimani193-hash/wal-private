@@ -25,13 +25,13 @@ const peutEcrire = (r: Reservation) =>
   (r.statut === "terminee" && !!r.terminee_at && Date.now() - new Date(r.terminee_at).getTime() < 24 * 3600 * 1000);
 
 const statutLabel: Record<string, { txt: string; color: string }> = {
-  en_attente: { txt: "En attente d'un coiffeur", color: "#C4A882" },
+  en_attente: { txt: "En attente d'un coiffeur", color: "#A9885A" },
   acceptee: { txt: "Acceptée — coiffeur assigné", color: "#5BA87A" },
   terminee: { txt: "Terminée", color: "#6B6B6B" },
-  annulee: { txt: "Annulée", color: "#B05050" },
+  annulee: { txt: "Annulée", color: "#7A2E2E" },
 };
 
-const wrap = "bg-[#0A0A0A] min-h-screen px-6 pt-28 pb-16";
+const wrap = "bg-[#11241B] min-h-screen px-6 pt-28 pb-16";
 
 export default function ComptePage() {
   const [supabase] = useState<SupabaseClient | null>(() => getSupabase());
@@ -153,7 +153,7 @@ export default function ComptePage() {
   };
 
   const inputDark =
-    "bg-white/5 border border-white/15 text-white px-4 py-3.5 text-sm outline-none focus:border-[#C4A882] transition-colors";
+    "bg-white/5 border border-white/15 text-white px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors";
 
   if (!supabaseConfigured) {
     return (
@@ -181,7 +181,7 @@ export default function ComptePage() {
     return (
       <div className={`${wrap} flex items-center justify-center`}>
         <div className="w-full max-w-sm">
-          <p className="sep text-[#C4A882]/60 text-xs mb-6 justify-center" style={{ letterSpacing: "0.3em" }}>
+          <p className="sep text-[#A9885A]/60 text-xs mb-6 justify-center" style={{ letterSpacing: "0.3em" }}>
             ESPACE CLIENT
           </p>
           <h1 className="text-white text-center mb-3" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "34px", fontWeight: 300 }}>
@@ -193,7 +193,7 @@ export default function ComptePage() {
 
           <button
             onClick={connexionGoogle}
-            className="w-full bg-white text-[#0A0A0A] text-sm py-3.5 flex items-center justify-center gap-3 hover:bg-white/90 transition-colors mb-5"
+            className="w-full bg-white text-[#11241B] text-sm py-3.5 flex items-center justify-center gap-3 hover:bg-white/90 transition-colors mb-5"
           >
             <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 4.75c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.46 14.97.5 12 .5A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 4.75 12 4.75z"/></svg>
             Continuer avec Google
@@ -206,10 +206,10 @@ export default function ComptePage() {
           </div>
 
           {linkSent ? (
-            <div className="bg-white/5 border border-[#C4A882]/30 p-6">
+            <div className="bg-white/5 border border-[#A9885A]/30 p-6">
               <p className="text-white text-sm mb-2 text-center">Email envoyé ✓</p>
               <p className="text-white/50 text-xs leading-relaxed text-center mb-5">
-                Envoyé à <span className="text-[#C4A882]">{authEmail}</span>. Cliquez le lien dans
+                Envoyé à <span className="text-[#A9885A]">{authEmail}</span>. Cliquez le lien dans
                 l&apos;email, <span className="text-white/70">ou</span> entrez le code reçu ci-dessous.
                 Pensez à vérifier vos spams.
               </p>
@@ -225,7 +225,7 @@ export default function ComptePage() {
               <button
                 onClick={verifierCode}
                 disabled={busy || code.length < 6}
-                className="w-full mt-3 bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
+                className="w-full mt-3 bg-[#A9885A] text-[#11241B] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
               >
                 {busy ? "VÉRIFICATION..." : "ME CONNECTER"}
               </button>
@@ -253,7 +253,7 @@ export default function ComptePage() {
               <button
                 onClick={envoyerLien}
                 disabled={busy || !authEmail}
-                className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
+                className="bg-[#A9885A] text-[#11241B] text-xs tracking-[0.2em] py-4 hover:bg-white transition-colors disabled:opacity-40"
               >
                 {busy ? "ENVOI..." : "RECEVOIR MON LIEN / CODE"}
               </button>
@@ -274,13 +274,13 @@ export default function ComptePage() {
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-10">
           <div>
-            <p className="text-[#C4A882]/60 text-xs tracking-[0.3em] mb-1">ESPACE CLIENT</p>
+            <p className="text-[#A9885A]/60 text-xs tracking-[0.3em] mb-1">ESPACE CLIENT</p>
             <h1 className="text-white" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "30px", fontWeight: 400 }}>
               Bonjour {profil.prenom || "👋"}
             </h1>
           </div>
           <div className="flex items-center gap-4">
-            <a href="/reserver" className="bg-[#C4A882] text-[#0A0A0A] text-xs tracking-widest px-5 py-2.5 hover:bg-white transition-colors">
+            <a href="/reserver" className="bg-[#A9885A] text-[#11241B] text-xs tracking-widest px-5 py-2.5 hover:bg-white transition-colors">
               RÉSERVER
             </a>
             <button onClick={seDeconnecter} className="text-white/40 hover:text-white text-xs tracking-widest transition-colors">
@@ -294,7 +294,7 @@ export default function ComptePage() {
           <p className="text-white/40 text-xs tracking-[0.2em] mb-4">DEMANDES EN COURS {enCours.length > 0 && `(${enCours.length})`}</p>
           {enCours.length === 0 ? (
             <div className="bg-white/5 border border-white/10 p-8 text-center">
-              <p className="text-white/40 text-sm">Aucune demande en cours. <a href="/reserver" className="text-[#C4A882]">Réservez un service</a>.</p>
+              <p className="text-white/40 text-sm">Aucune demande en cours. <a href="/reserver" className="text-[#A9885A]">Réservez un service</a>.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-3">
@@ -302,7 +302,7 @@ export default function ComptePage() {
                 <div key={r.id} className="bg-white/5 border border-white/15 p-5">
                   <div className="flex items-baseline justify-between mb-2">
                     <span className="text-white text-sm">{r.prestation_label}</span>
-                    <span className="text-[#C4A882] text-sm">{r.prix} MAD</span>
+                    <span className="text-[#A9885A] text-sm">{r.prix} MAD</span>
                   </div>
                   <p className="text-white/40 text-xs mb-2">
                     {r.zone} · {r.quand === "last_minute" ? "⚡ Last Minute" : r.quand}
@@ -369,7 +369,7 @@ export default function ComptePage() {
                 <option key={z} value={z}>{z}</option>
               ))}
             </select>
-            <button onClick={enregistrerProfil} disabled={busy} className="sm:col-span-2 bg-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] py-3.5 hover:bg-white transition-colors disabled:opacity-40">
+            <button onClick={enregistrerProfil} disabled={busy} className="sm:col-span-2 bg-[#A9885A] text-[#11241B] text-xs tracking-[0.2em] py-3.5 hover:bg-white transition-colors disabled:opacity-40">
               {profilSaved ? "ENREGISTRÉ ✓" : "ENREGISTRER MES INFOS"}
             </button>
           </div>

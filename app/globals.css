@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+/* ───────────────────────────────────────────────
+   PALETTE « LE CLUB PRIVÉ » — tokens de la refonte
+   (voir WAL — Sync direction validee.md §1)
+   ─────────────────────────────────────────────── */
+:root {
+  --vert: #1F3A2D;          /* couleur maîtresse */
+  --nuit: #11241B;          /* fonds sombres (hero, footer, sections accent) */
+  --ivoire: #F2EDE3;        /* fond clair par défaut */
+  --laiton: #A9885A;        /* accent / CTA — max 10 % d'une vue */
+  --grenat: #7A2E2E;        /* erreurs & urgence uniquement */
+  --laiton-texte: #8A6D43;  /* laiton assombri pour texte sur ivoire (AA) */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1); /* easing luxe */
+}
+
 * {
   box-sizing: border-box;
 }
@@ -9,15 +23,15 @@ html {
 }
 
 body {
-  background-color: #F8F5F0;
-  color: #0A0A0A;
+  background-color: var(--ivoire);
+  color: var(--vert);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background-color: #C4A882;
-  color: #0A0A0A;
+  background-color: var(--laiton);
+  color: var(--nuit);
 }
 
 /* ── Decorative separator ── */
@@ -47,7 +61,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background-color: #0A0A0A;
+  background-color: #11241B;
   transform: translateY(100%);
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 0;
@@ -70,7 +84,7 @@ body {
   transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .grade-card:hover {
-  border-color: rgba(196, 168, 130, 0.35);
+  border-color: rgba(169, 136, 90, 0.35);
   transform: translateY(-6px);
 }
 .grade-card::after {
@@ -83,13 +97,18 @@ body {
   background: linear-gradient(
     105deg,
     transparent 40%,
-    rgba(196, 168, 130, 0.04) 50%,
+    rgba(169, 136, 90, 0.04) 50%,
     transparent 60%
   );
   transition: left 0.7s ease;
 }
 .grade-card:hover::after {
   left: 150%;
+}
+
+/* ── Marquee défilant (Club Privé) ── */
+@keyframes wal-marquee {
+  to { transform: translateX(-50%); }
 }
 
 /* ── Legacy fade animations (kept for compatibility) ── */
