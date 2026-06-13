@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   prestationsV1,
   grades,
@@ -16,6 +17,9 @@ import { getSupabase } from "@/lib/supabase";
 
 // Numéro WhatsApp WAL (repli si la plateforme n'est pas encore configurée)
 const WAL_WHATSAPP = "32496974983";
+
+// Clé du brouillon conservé pendant un détour par /compte (Last Minute membres)
+const DRAFT_KEY = "wal_reserver_draft";
 
 function SectionTitle({ n, title }: { n: string; title: string }) {
   return (
@@ -48,8 +52,12 @@ export default function ReserverPage() {
   const whatsappComplet = `${indicatifFinal} ${whatsapp.trim()}`.trim();
   const [statut, setStatut] = useState<"idle" | "envoi" | "ok" | "erreur">("idle");
   const [userId, setUserId] = useState<string | null>(null);
+  const [lmIndispo, setLmIndispo] = useState(false); // aucun coiffeur en ligne pour un Last Minute
+  const router = useRouter();
 
-  // Si le client est connecté : on rattache la réservation et on pré-remplit ses infos
+  // Si le client est connecté : on rattache la réservation et on pré-remplit ses infos.
+  // On restaure aussi un éventuel brouillon laissé avant un détour par /compte
+  // (cas du Last Minute réservé aux membres → création de compte → retour ici).
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase) return;
@@ -63,8 +71,33 @@ export default function ReserverPage() {
         if (p.telephone) setWhatsapp(p.telephone);
         if (p.zone) setZone(p.zone);
       }
+      restaurerBrouillon();
     });
   }, []);
+
+  // Restaure les choix faits avant la connexion (clé localStorage), puis l'efface.
+  function restaurerBrouillon() {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.prestationId) setPrestationId(d.prestationId);
+      if (d.gradeId) setGradeId(d.gradeId);
+      if (typeof d.lastMinute === "boolean") setLastMinute(d.lastMinute);
+      if (d.date) setDate(d.date);
+      if (d.creneau) setCreneau(d.creneau);
+      if (d.zone) setZone(d.zone);
+      if (d.prenom) setPrenom(d.prenom);
+      if (d.indicatif) setIndicatif(d.indicatif);
+      if (d.indicatifAutre) setIndicatifAutre(d.indicatifAutre);
+      if (d.whatsapp) setWhatsapp(d.whatsapp);
+      if (d.notes) setNotes(d.notes);
+    } catch {
+      /* brouillon illisible : on ignore */
+    } finally {
+      localStorage.removeItem(DRAFT_KEY);
+    }
+  }
 
   const prestation = prestationsV1.find((p) => p.id === prestationId) ?? null;
   const grade = grades.find((g) => g.id === gradeId)!;
@@ -89,11 +122,49 @@ export default function ReserverPage() {
     ? "last_minute"
     : `${date} · ${creneaux.find((c) => c.id === creneau)?.label}`;
 
+  // Last Minute = réservé aux membres : si non connecté, on bloque (soft) et on invite à créer un compte.
+  const lmBloque = lastMinute && !userId;
+
+  // Sauvegarde les choix puis envoie vers /compte ; au retour, restaurerBrouillon() reprend tout.
+  const allerCreerCompte = () => {
+    try {
+      localStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({
+          prestationId, gradeId, lastMinute, date, creneau, zone,
+          prenom, indicatif, indicatifAutre, whatsapp, notes,
+        })
+      );
+    } catch {
+      /* localStorage indispo : tant pis, on redirige quand même */
+    }
+    router.push("/compte");
+  };
+
   const envoyer = async () => {
     if (!valide || !prestation || !prix) return;
+    if (lmBloque) {
+      allerCreerCompte();
+      return;
+    }
     setStatut("envoi");
 
     const supabase = getSupabase();
+
+    // Last Minute : vérifier qu'au moins un coiffeur est en ligne dans la zone.
+    // Sinon, on n'envoie pas dans le vide → on propose de planifier.
+    if (lastMinute && supabase) {
+      const { data: nbEnLigne, error: errCount } = await supabase.rpc(
+        "compter_coiffeurs_en_ligne",
+        { zone_demandee: zone }
+      );
+      // errCount = fonction pas encore déployée → on n'empêche pas la réservation
+      if (!errCount && typeof nbEnLigne === "number" && nbEnLigne === 0) {
+        setLmIndispo(true);
+        setStatut("idle");
+        return;
+      }
+    }
 
     // Mode plateforme : on enregistre la demande, les coiffeurs en ligne la voient
     if (supabase) {
@@ -177,7 +248,7 @@ export default function ReserverPage() {
             {userId ? (
               <>Connecté ✓ — suivez vos demandes dans <a href="/compte" className="text-[#C4A882] underline underline-offset-4">votre espace</a>.</>
             ) : (
-              <><a href="/compte" className="text-[#C4A882] underline underline-offset-4">Connectez-vous</a> pour suivre vos demandes et garder votre historique. Sinon, réservez directement ci-dessous.</>
+              <>Avec un <a href="/compte" className="text-[#C4A882] underline underline-offset-4">compte</a> : le Last Minute, votre historique et la messagerie privée avec le coiffeur. Sinon, réservez directement ci-dessous.</>
             )}
           </p>
         </div>
@@ -262,6 +333,7 @@ export default function ReserverPage() {
                   setLastMinute(!lastMinute);
                   setCreneau(null);
                   setDate("");
+                  setLmIndispo(false);
                 }}
                 className={`w-full border px-5 py-4 mb-4 text-left transition-colors duration-300 ${
                   lastMinute ? "bg-[#0A0A0A] border-[#0A0A0A] text-white" : "bg-white border-[#E8E4DF] hover:border-[#C4A882]/50"
@@ -275,6 +347,49 @@ export default function ReserverPage() {
                   Confirmation en 30 minutes par le premier coiffeur disponible.
                 </p>
               </button>
+
+              {/* Last Minute réservé aux membres */}
+              {lmBloque && (
+                <div className="border border-[#C4A882]/40 bg-[#C4A882]/5 px-5 py-4 mb-4">
+                  <p className="text-sm text-[#0A0A0A]">
+                    Le Last Minute est réservé aux membres.
+                  </p>
+                  <p className="text-xs text-[#6B6B6B] mt-1 leading-relaxed">
+                    Créez votre compte en 10 secondes (lien magique ou Google) pour débloquer
+                    le Last Minute, votre historique et la messagerie privée avec le coiffeur.
+                    Vos choix sont conservés.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={allerCreerCompte}
+                    className="mt-3 bg-[#0A0A0A] text-white text-xs tracking-[0.2em] px-5 py-3 hover:bg-[#1a1a1a] transition-colors duration-300"
+                  >
+                    CRÉER MON COMPTE
+                  </button>
+                </div>
+              )}
+
+              {/* Aucun coiffeur en ligne pour un Last Minute */}
+              {lmIndispo && (
+                <div className="border border-[#E8E4DF] bg-white px-5 py-4 mb-4">
+                  <p className="text-sm text-[#0A0A0A]">
+                    Aucun coiffeur n&apos;est en ligne à l&apos;instant dans votre zone.
+                  </p>
+                  <p className="text-xs text-[#6B6B6B] mt-1">
+                    Planifiez votre rendez-vous : un coiffeur le prendra dès qu&apos;il sera disponible.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLastMinute(false);
+                      setLmIndispo(false);
+                    }}
+                    className="mt-3 border border-[#C4A882] text-[#0A0A0A] text-xs tracking-[0.2em] px-5 py-3 hover:bg-[#C4A882] transition-colors duration-300"
+                  >
+                    PLANIFIER PLUTÔT
+                  </button>
+                </div>
+              )}
 
               {!lastMinute && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -448,7 +563,7 @@ export default function ReserverPage() {
                     : "bg-white/10 text-white/30 cursor-not-allowed"
                 }`}
               >
-                {statut === "envoi" ? "ENVOI..." : "RÉSERVER"}
+                {statut === "envoi" ? "ENVOI..." : lmBloque ? "CRÉER MON COMPTE" : "RÉSERVER"}
               </button>
               {statut === "erreur" && (
                 <p className="text-red-300/80 text-xs mt-4">
