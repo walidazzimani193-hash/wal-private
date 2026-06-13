@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Image from "next/image";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/Button";
 import { Marquee } from "@/components/ui/Marquee";
@@ -30,9 +30,9 @@ const marqueeItems = [
 ];
 
 const exp = [
-  { label: "AMBIANCE", legende: "Coiffure à domicile" },
-  { label: "MÉTIER", legende: "Le coiffeur en action" },
-  { label: "RÉSULTAT", legende: "Le résultat final" },
+  { src: "/images/soin-ambiance.jpg", alt: "L'ambiance d'un soin à domicile" },
+  { src: "/images/soin-metier.jpg", alt: "Le coiffeur en action" },
+  { src: "/images/soin-resultat.jpg", alt: "Le résultat final" },
 ];
 
 const faq: AccordionItem[] = [
@@ -73,19 +73,10 @@ const faq: AccordionItem[] = [
   },
 ];
 
-function ImgPlaceholder({ label, legende, ratio }: { label: string; legende: string; ratio: string }) {
+function Visuel({ src, alt, ratio }: { src: string; alt: string; ratio: string }) {
   return (
-    <div
-      className="relative flex flex-col items-center justify-center gap-2 border border-[var(--ivoire)]/12 bg-[var(--ivoire)]/[0.04] text-[var(--ivoire)]/30"
-      style={{ aspectRatio: ratio }}
-    >
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-        <rect x="3" y="3" width="18" height="18" rx="1" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <polyline points="21 15 16 10 5 21" />
-      </svg>
-      <span className="text-[10px] tracking-[0.2em]">{legende.toUpperCase()}</span>
-      <span className="absolute bottom-4 left-4 text-[10px] tracking-[0.2em] opacity-50">{label}</span>
+    <div className="relative overflow-hidden" style={{ aspectRatio: ratio }}>
+      <Image src={src} alt={alt} fill sizes="(max-width:768px) 100vw, 40vw" className="object-cover" />
     </div>
   );
 }
@@ -139,7 +130,7 @@ export default function Home() {
 
           {/* visuel */}
           <FadeIn delay={0.35} direction="left" className="relative hidden md:block">
-            <ImgPlaceholder label="1080 × 1350 · WebP" legende="Prestation à domicile" ratio="4 / 5" />
+            <Visuel src="/images/hero.jpg" alt="Coiffure professionnelle à domicile à Marrakech" ratio="4 / 5" />
             <span className="absolute -bottom-4 -left-4 bg-[var(--laiton)] px-4 py-3 text-[11px] font-semibold tracking-[0.18em] text-[var(--nuit)]">
               RÉSERVATION OUVERTE
             </span>
@@ -199,7 +190,7 @@ export default function Home() {
       <section className="px-8 py-24">
         <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-center gap-14 md:grid-cols-2">
           <FadeIn>
-            <ImgPlaceholderLight />
+            <Visuel src="/images/last-minute.jpg" alt="Un coiffeur disponible en express" ratio="4 / 5" />
           </FadeIn>
           <FadeIn delay={0.1}>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Last Minute</p>
@@ -231,8 +222,8 @@ export default function Home() {
           </FadeIn>
           <div className="mt-12 grid grid-cols-1 gap-2 md:grid-cols-3">
             {exp.map((e, i) => (
-              <FadeIn key={e.label} delay={0.1 + i * 0.1}>
-                <ImgPlaceholder label={e.label} legende={e.legende} ratio="3 / 4" />
+              <FadeIn key={e.src} delay={0.1 + i * 0.1}>
+                <Visuel src={e.src} alt={e.alt} ratio="3 / 4" />
               </FadeIn>
             ))}
           </div>
@@ -254,6 +245,36 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── CÔTÉ COIFFEUR (recrutement, visible sans polluer le client) ── */}
+      <section className="px-8 py-20">
+        <div className="mx-auto max-w-[1080px]">
+          <FadeIn>
+            <div className="grid grid-cols-1 items-center gap-10 border border-[var(--laiton)]/30 bg-[var(--vert)]/[0.03] p-10 md:grid-cols-[1.25fr_1fr] md:p-14">
+              <div>
+                <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Côté coiffeur</p>
+                <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(26px,3.5vw,38px)", lineHeight: 1.12 }}>
+                  Vous êtes coiffeur ? <em className="italic text-[var(--laiton-texte)]">Développez votre clientèle, librement.</em>
+                </h2>
+                <ul className="mt-6 flex flex-col gap-2.5 text-[14px] text-[var(--vert)]/75">
+                  <li className="flex gap-3"><span className="text-[var(--laiton-texte)]">—</span> Une nouvelle clientèle, sans avance ni abonnement.</li>
+                  <li className="flex gap-3"><span className="text-[var(--laiton-texte)]">—</span> Vos horaires, votre zone, vos prestations — vous décidez.</li>
+                  <li className="flex gap-3"><span className="text-[var(--laiton-texte)]">—</span> Rémunération transparente, réglée après chaque prestation.</li>
+                </ul>
+              </div>
+              <div className="flex flex-col items-start gap-4 md:items-end">
+                <Button href="/coiffeurs" variant="vert">DEVENIR COIFFEUR WAL</Button>
+                <Link
+                  href="/pro"
+                  className="border-b border-[var(--vert)]/25 pb-0.5 text-[12px] tracking-[0.1em] text-[var(--vert)]/60 transition-colors duration-300 hover:border-[var(--laiton-texte)] hover:text-[var(--vert)]"
+                >
+                  J'ai déjà un compte — me connecter
+                </Link>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* ── CTA FINALE ── */}
       <section className="relative overflow-hidden bg-[var(--nuit)] px-8 py-28 text-center text-[var(--ivoire)]">
         <div className="mx-auto max-w-[1080px]">
@@ -269,26 +290,6 @@ export default function Home() {
           </FadeIn>
         </div>
       </section>
-    </div>
-  );
-}
-
-/* Placeholder image sur fond clair (section Last Minute) */
-function ImgPlaceholderLight() {
-  return (
-    <div
-      className="relative flex flex-col items-center justify-center gap-2 border border-[var(--vert)]/12 bg-[var(--vert)]/[0.04] text-[var(--vert)]/30"
-      style={{ aspectRatio: "4 / 5" }}
-    >
-      <motion.svg
-        width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"
-        initial={{ opacity: 0.3 }} animate={{ opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 3, repeat: Infinity }}
-      >
-        <rect x="3" y="3" width="18" height="18" rx="1" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <polyline points="21 15 16 10 5 21" />
-      </motion.svg>
-      <span className="text-[10px] tracking-[0.2em]">LAST MINUTE — EXPRESS</span>
     </div>
   );
 }
