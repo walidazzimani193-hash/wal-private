@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/Button";
 import { Marquee } from "@/components/ui/Marquee";
 import { GradeTabs, type Grade } from "@/components/ui/GradeTabs";
 import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
+import { Halo } from "@/components/ui/Halo";
+import { CompteurEnLigne } from "@/components/ui/CompteurEnLigne";
 
 const grades: Grade[] = [
   { roman: "I", label: "Novice", min: 150, max: 300, desc: "Jeunes talents certifiés, accompagnés par un mentor WAL. Le bon geste, au tarif le plus accessible du cercle." },
@@ -29,10 +30,10 @@ const marqueeItems = [
   "MARRAKECH",
 ];
 
-const exp = [
-  { src: "/images/soin-ambiance.jpg", alt: "L'ambiance d'un soin à domicile" },
-  { src: "/images/soin-metier.jpg", alt: "Le coiffeur en action" },
-  { src: "/images/soin-resultat.jpg", alt: "Le résultat final" },
+const metier = [
+  { mot: "Précision", desc: "Le geste juste, la coupe pensée pour vous — pas une chaîne, un artisan." },
+  { mot: "Discrétion", desc: "Un professionnel qui s'installe sans déranger, et repart sans trace." },
+  { mot: "Résultat", desc: "Le rendu d'un salon d'exception, dans le confort de chez vous." },
 ];
 
 const faq: AccordionItem[] = [
@@ -72,14 +73,6 @@ const faq: AccordionItem[] = [
     ),
   },
 ];
-
-function Visuel({ src, alt, ratio }: { src: string; alt: string; ratio: string }) {
-  return (
-    <div className="relative overflow-hidden" style={{ aspectRatio: ratio }}>
-      <Image src={src} alt={alt} fill sizes="(max-width:768px) 100vw, 40vw" className="object-cover" />
-    </div>
-  );
-}
 
 const SerifTitle = "var(--font-cormorant), Georgia, serif";
 
@@ -128,10 +121,21 @@ export default function Home() {
             </FadeIn>
           </div>
 
-          {/* visuel */}
+          {/* panneau sceau + halo (là où était l'image) */}
           <FadeIn delay={0.35} direction="left" className="relative hidden md:block">
-            <Visuel src="/images/hero.jpg" alt="Coiffure professionnelle à domicile à Marrakech" ratio="4 / 5" />
-            <span className="absolute -bottom-4 -left-4 bg-[var(--laiton)] px-4 py-3 text-[11px] font-semibold tracking-[0.18em] text-[var(--nuit)]">
+            <div className="relative aspect-[4/5] overflow-hidden border border-[var(--laiton)]/25 bg-[linear-gradient(160deg,#16301f_0%,#0d1d14_100%)]">
+              <Halo placement="top-right" />
+              <div className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center">
+                <span style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(96px,11vw,140px)" }} className="leading-none text-[var(--ivoire)]/90">
+                  W
+                </span>
+                <span className="mt-5 block h-px w-12 bg-[var(--laiton)]/50" />
+                <p className="mt-5 text-[11px] uppercase tracking-[0.32em] text-[var(--ivoire)]/55">
+                  Cercle privé · Marrakech
+                </p>
+              </div>
+            </div>
+            <span className="absolute -bottom-4 -left-4 z-20 bg-[var(--laiton)] px-4 py-3 text-[11px] font-semibold tracking-[0.18em] text-[var(--nuit)]">
               RÉSERVATION OUVERTE
             </span>
           </FadeIn>
@@ -190,7 +194,10 @@ export default function Home() {
       <section className="px-8 py-24">
         <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-center gap-14 md:grid-cols-2">
           <FadeIn>
-            <Visuel src="/images/last-minute.jpg" alt="Un coiffeur disponible en express" ratio="4 / 5" />
+            <div className="relative flex aspect-[4/5] items-center overflow-hidden border border-[var(--laiton)]/20 bg-[linear-gradient(160deg,var(--nuit)_0%,#0d1d14_100%)] px-10">
+              <Halo placement="right" />
+              <CompteurEnLigne />
+            </div>
           </FadeIn>
           <FadeIn delay={0.1}>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Last Minute</p>
@@ -211,19 +218,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── EXPÉRIENCE (visuels) ── */}
-      <section className="bg-[var(--nuit)] px-8 py-24 text-[var(--ivoire)]">
-        <div className="mx-auto max-w-[1080px]">
+      {/* ── EXPÉRIENCE (triptyque typographique + halo) ── */}
+      <section className="relative overflow-hidden bg-[var(--nuit)] px-8 py-24 text-[var(--ivoire)]">
+        <Halo placement="bottom-right" />
+        <div className="relative z-10 mx-auto max-w-[1080px]">
           <FadeIn>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">L'expérience WAL</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
               Le soin qui se <em className="italic text-[var(--laiton)]">déplace.</em>
             </h2>
           </FadeIn>
-          <div className="mt-12 grid grid-cols-1 gap-2 md:grid-cols-3">
-            {exp.map((e, i) => (
-              <FadeIn key={e.src} delay={0.1 + i * 0.1}>
-                <Visuel src={e.src} alt={e.alt} ratio="3 / 4" />
+          <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden border border-[var(--ivoire)]/10 md:grid-cols-3">
+            {metier.map((m, i) => (
+              <FadeIn key={m.mot} delay={0.1 + i * 0.1} className="h-full">
+                <div className="h-full bg-[var(--ivoire)]/[0.02] px-9 py-12 outline outline-1 outline-[var(--ivoire)]/10">
+                  <h3 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(30px,4vw,44px)", lineHeight: 1 }} className="text-[var(--ivoire)]">
+                    {m.mot}
+                  </h3>
+                  <span className="mt-5 block h-px w-10 bg-[var(--laiton)]/55" />
+                  <p className="mt-5 text-[14px] leading-relaxed text-[var(--ivoire)]/60">{m.desc}</p>
+                </div>
               </FadeIn>
             ))}
           </div>

@@ -111,6 +111,63 @@ body {
   to { transform: translateX(-50%); }
 }
 
+/* ── Halo / aura (remplace les photos — motion ton sur ton) ──
+   Lumière décentrée qui « respire ». Un seul élément animé en
+   transform/opacity. Grain figé par-dessus pour casser le banding. */
+.wal-aura { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+
+.wal-aura__halo {
+  position: absolute;
+  width: 78%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  /* ton sur ton : vert légèrement plus chaud/clair que le fond, soupçon de
+     laiton très désaturé au cœur. On doit le sentir, pas le voir. */
+  background: radial-gradient(circle at 50% 50%,
+    rgba(108, 130, 96, 0.34) 0%,
+    rgba(74, 100, 74, 0.18) 32%,
+    rgba(17, 36, 27, 0) 66%);
+  animation: wal-breathe 26s var(--ease) infinite;
+  will-change: transform, opacity;
+}
+/* placements décentrés — jamais au milieu */
+.wal-aura__halo[data-pos="top-right"]    { top: -26%; right: -14%; }
+.wal-aura__halo[data-pos="right"]        { top: 8%;  right: -22%; }
+.wal-aura__halo[data-pos="bottom-right"] { bottom: -28%; right: -10%; }
+
+.wal-aura__grain {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+  opacity: 0.05;
+}
+
+@keyframes wal-breathe {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);     opacity: 1; }
+  50%      { transform: translate3d(-8px, 6px, 0) scale(1.05); opacity: 0.97; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wal-aura__halo { animation: none; }
+}
+
+/* ── Pastille « en ligne » (compteur Last Minute) ── */
+.wal-live-dot {
+  position: relative; display: inline-block;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #6FB07E;
+  box-shadow: 0 0 0 0 rgba(111, 176, 126, 0.5);
+  animation: wal-live 2.6s ease-out infinite;
+}
+@keyframes wal-live {
+  0%   { box-shadow: 0 0 0 0 rgba(111, 176, 126, 0.45); }
+  70%  { box-shadow: 0 0 0 10px rgba(111, 176, 126, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(111, 176, 126, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wal-live-dot { animation: none; }
+}
+
 /* ── Legacy fade animations (kept for compatibility) ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(28px); }
