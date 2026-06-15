@@ -78,7 +78,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* ── HERO ── */}
-      <header className="relative overflow-hidden bg-[linear-gradient(175deg,var(--nuit)_0%,#16301f_100%)] px-8 pt-44 pb-32 text-[var(--ivoire)]">
+      <header className="relative overflow-hidden bg-[linear-gradient(175deg,var(--nuit)_0%,#16301f_100%)] px-7 pt-36 pb-24 text-[var(--ivoire)] sm:px-8 md:pt-44 md:pb-32">
         {/* sceau décoratif */}
         <svg
           className="pointer-events-none absolute -right-32 top-1/2 -mt-[310px] animate-[spin_140s_linear_infinite] opacity-[0.05]"
@@ -116,6 +116,20 @@ export default function Home() {
                   MON COMPTE
                 </Link>
               </div>
+            </Reveal>
+
+            {/* emblème or — mobile uniquement (le panneau sceau est desktop) */}
+            <Reveal delay={0.4} className="mt-12 md:hidden">
+              <div className="flex items-center gap-4" aria-hidden="true">
+                <span className="h-px flex-1 bg-[var(--laiton)]/30" />
+                <span style={{ fontFamily: SerifTitle, fontWeight: 500 }} className="text-[30px] leading-none text-[var(--laiton)]">
+                  W
+                </span>
+                <span className="h-px flex-1 bg-[var(--laiton)]/30" />
+              </div>
+              <p className="mt-4 text-center text-[10.5px] uppercase tracking-[0.34em] text-[var(--laiton)]/80">
+                Cercle privé · Marrakech
+              </p>
             </Reveal>
           </div>
 
