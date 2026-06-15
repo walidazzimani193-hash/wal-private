@@ -25,8 +25,8 @@ function SectionTitle({ n, title }: { n: string; title: string }) {
   return (
     <div className="flex items-baseline gap-4 mb-6">
       <span
-        className="text-[#A9885A]/50"
-        style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "34px", fontWeight: 300, lineHeight: 1 }}
+        className="text-[var(--laiton)]/75"
+        style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "38px", fontWeight: 300, lineHeight: 1 }}
       >
         {n}
       </span>
@@ -204,22 +204,22 @@ export default function ReserverPage() {
   };
 
   const inputCls =
-    "bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[#A9885A] transition-colors";
+    "bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[var(--laiton)] transition-colors";
   const labelCls = "text-xs tracking-widest text-[#6B6B6B]";
 
   // Écran de confirmation
   if (statut === "ok") {
     return (
-      <div className="bg-[#11241B] min-h-screen flex items-center justify-center px-6">
+      <div className="bg-[var(--nuit)] min-h-screen flex items-center justify-center px-6">
         <div className="max-w-lg text-center">
-          <p className="sep text-[#A9885A]/60 text-xs mb-8 justify-center" style={{ letterSpacing: "0.3em" }}>
+          <p className="sep text-[var(--laiton)]/60 text-xs mb-8 justify-center" style={{ letterSpacing: "0.3em" }}>
             DEMANDE ENVOYÉE
           </p>
           <h1
             className="text-white leading-tight mb-6"
             style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 300 }}
           >
-            On vous trouve <em style={{ fontStyle: "italic", color: "#A9885A" }}>votre coiffeur.</em>
+            On vous trouve <em style={{ fontStyle: "italic", color: "var(--laiton)" }}>votre coiffeur.</em>
           </h1>
           <p className="text-white/50 text-sm leading-relaxed">
             Vous êtes prévenu dès qu&apos;un coiffeur accepte — en quelques minutes,
@@ -233,34 +233,34 @@ export default function ReserverPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="bg-[#11241B] pt-36 pb-16 px-6">
+      <section className="bg-[var(--nuit)] pt-36 pb-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <p className="sep text-[#A9885A]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
+          <p className="sep text-[var(--laiton)]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
             RÉSERVATION
           </p>
           <h1
             className="text-white leading-tight max-w-3xl"
             style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 300 }}
           >
-            Votre coiffeur, <em style={{ fontStyle: "italic", color: "#A9885A" }}>chez vous.</em>
+            Votre coiffeur, <em style={{ fontStyle: "italic", color: "var(--laiton)" }}>chez vous.</em>
           </h1>
           <p className="text-white/50 text-sm mt-6 max-w-xl leading-relaxed">
             Un coiffeur vous répond en quelques minutes — 10 minutes maximum.
           </p>
           <p className="text-white/40 text-sm mt-3">
             {userId ? (
-              <>Connecté ✓ — suivez vos demandes dans <a href="/compte" className="text-[#A9885A] underline underline-offset-4">votre espace</a>.</>
+              <>Connecté ✓ — suivez vos demandes dans <a href="/compte" className="text-[var(--laiton)] underline underline-offset-4">votre espace</a>.</>
             ) : (
-              <>La réservation se fait avec un <a href="/compte" className="text-[#A9885A] underline underline-offset-4">compte</a> (création en 10 secondes) — vous y gardez votre historique, la messagerie privée avec le coiffeur et l&apos;accès au Last Minute.</>
+              <>La réservation se fait avec un <a href="/compte" className="text-[var(--laiton)] underline underline-offset-4">compte</a> (création en 10 secondes) — vous y gardez votre historique, la messagerie privée avec le coiffeur et l&apos;accès au Last Minute.</>
             )}
           </p>
         </div>
       </section>
 
-      <section className="bg-[#F2EDE3] py-16 px-6">
+      <section className="bg-[var(--ivoire)] pt-16 pb-28 lg:pb-16 px-6 border-t-2 border-[var(--laiton)]/25">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12">
           {/* ── Formulaire ── */}
-          <div className="flex flex-col gap-14">
+          <div className="flex flex-col gap-10 sm:gap-14">
             {/* 1. Prestation */}
             <div>
               <SectionTitle n="01" title="Choisissez vos prestations" />
@@ -284,21 +284,21 @@ export default function ReserverPage() {
                             onClick={() => togglePrestation(p.id)}
                             aria-pressed={choisi}
                             className={`text-left border px-5 py-4 transition-colors duration-300 ${
-                              choisi ? "border-[#A9885A] bg-[#A9885A]/10" : "bg-white border-[#E3DCC9] hover:border-[#A9885A]/50"
+                              choisi ? "border-[var(--laiton)] bg-[var(--laiton)]/10" : "bg-white border-[#E3DCC9] hover:border-[var(--laiton)]/50"
                             }`}
                           >
                             <div className="flex items-baseline justify-between gap-3">
-                              <span className="text-sm text-[#11241B] flex items-center gap-2">
+                              <span className="text-sm text-[var(--nuit)] flex items-center gap-2">
                                 <span
                                   className={`inline-flex h-4 w-4 items-center justify-center border text-[10px] ${
-                                    choisi ? "bg-[#A9885A] border-[#A9885A] text-white" : "border-[#A9885A]/40 text-transparent"
+                                    choisi ? "bg-[var(--laiton)] border-[var(--laiton)] text-white" : "border-[var(--laiton)]/40 text-transparent"
                                   }`}
                                 >
                                   ✓
                                 </span>
                                 {p.label}
                               </span>
-                              <span className="text-sm text-[#A9885A] whitespace-nowrap">
+                              <span className="text-sm text-[var(--laiton)] whitespace-nowrap">
                                 dès {round5((p.base ?? 0) * 0.7)} MAD
                               </span>
                             </div>
@@ -323,18 +323,18 @@ export default function ReserverPage() {
                       type="button"
                       onClick={() => setGradeId(g.id)}
                       className={`bg-white border px-4 py-5 text-center transition-colors duration-300 ${
-                        gradeId === g.id ? "border-[#A9885A]" : "border-[#E3DCC9] hover:border-[#A9885A]/50"
+                        gradeId === g.id ? "border-[var(--laiton)]" : "border-[#E3DCC9] hover:border-[var(--laiton)]/50"
                       }`}
                     >
                       <span
-                        className="block text-[#A9885A]/60 mb-1"
+                        className="block text-[var(--laiton)]/60 mb-1"
                         style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "24px", fontWeight: 300 }}
                       >
                         {g.roman}
                       </span>
-                      <span className="block text-sm text-[#11241B]">{g.label}</span>
+                      <span className="block text-sm text-[var(--nuit)]">{g.label}</span>
                       <span className="block text-xs text-[#6B6B6B] mt-1">{g.desc}</span>
-                      <span className="block text-sm text-[#A9885A] mt-2">
+                      <span className="block text-sm text-[var(--laiton)] mt-2">
                         {prixGrade !== null ? `${prixGrade} MAD` : g.id === "maitre" ? "× 2,5" : `× ${g.mult}`}
                       </span>
                     </button>
@@ -355,12 +355,12 @@ export default function ReserverPage() {
                   setLmIndispo(false);
                 }}
                 className={`w-full border px-5 py-4 mb-4 text-left transition-colors duration-300 ${
-                  lastMinute ? "bg-[#11241B] border-[#11241B] text-white" : "bg-white border-[#E3DCC9] hover:border-[#A9885A]/50"
+                  lastMinute ? "bg-[var(--nuit)] border-[var(--nuit)] text-white" : "bg-white border-[#E3DCC9] hover:border-[var(--laiton)]/50"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Last Minute — aujourd&apos;hui, au plus vite</span>
-                  <span className={`text-xs tracking-wider ${lastMinute ? "text-[#A9885A]" : "text-[#6B6B6B]"}`}>+25 %</span>
+                  <span className={`text-xs tracking-wider ${lastMinute ? "text-[var(--laiton)]" : "text-[#6B6B6B]"}`}>+25 %</span>
                 </div>
                 <p className={`text-xs mt-1 ${lastMinute ? "text-white/50" : "text-[#6B6B6B]"}`}>
                   Réponse en moins de 10 minutes par le premier coiffeur disponible.
@@ -370,7 +370,7 @@ export default function ReserverPage() {
               {/* Aucun coiffeur en ligne pour un Last Minute */}
               {lmIndispo && (
                 <div className="border border-[#E3DCC9] bg-white px-5 py-4 mb-4">
-                  <p className="text-sm text-[#11241B]">
+                  <p className="text-sm text-[var(--nuit)]">
                     Aucun coiffeur n&apos;est en ligne à l&apos;instant dans votre zone.
                   </p>
                   <p className="text-xs text-[#6B6B6B] mt-1">
@@ -382,7 +382,7 @@ export default function ReserverPage() {
                       setLastMinute(false);
                       setLmIndispo(false);
                     }}
-                    className="mt-3 border border-[#A9885A] text-[#11241B] text-xs tracking-[0.2em] px-5 py-3 hover:bg-[#A9885A] transition-colors duration-300"
+                    className="mt-3 border border-[var(--laiton)] text-[var(--nuit)] text-xs tracking-[0.2em] px-5 py-3 hover:bg-[var(--laiton)] transition-colors duration-300"
                   >
                     PLANIFIER PLUTÔT
                   </button>
@@ -396,7 +396,7 @@ export default function ReserverPage() {
                       DATE
                     </label>
                     <input type="date" min={today} value={date} onChange={(e) => setDate(e.target.value)} className={inputCls} />
-                    {dimanche && <p className="text-xs text-[#A9885A]">Dimanche : majoration +20 %</p>}
+                    {dimanche && <p className="text-xs text-[var(--laiton)]">Dimanche : majoration +20 %</p>}
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className={labelCls} style={{ letterSpacing: "0.15em" }}>
@@ -409,10 +409,10 @@ export default function ReserverPage() {
                           type="button"
                           onClick={() => setCreneau(c.id)}
                           className={`bg-white border px-2 py-3 text-center transition-colors duration-300 ${
-                            creneau === c.id ? "border-[#A9885A]" : "border-[#E3DCC9] hover:border-[#A9885A]/50"
+                            creneau === c.id ? "border-[var(--laiton)]" : "border-[#E3DCC9] hover:border-[var(--laiton)]/50"
                           }`}
                         >
-                          <span className="block text-xs text-[#11241B]">{c.label}</span>
+                          <span className="block text-xs text-[var(--nuit)]">{c.label}</span>
                           <span className="block text-[10px] text-[#6B6B6B] mt-0.5">{c.heures}</span>
                         </button>
                       ))}
@@ -432,11 +432,11 @@ export default function ReserverPage() {
                     type="button"
                     onClick={() => setZone(z)}
                     className={`bg-white border px-4 py-2.5 text-sm transition-colors duration-300 ${
-                      zone === z ? "border-[#A9885A] text-[#11241B]" : "border-[#E3DCC9] text-[#6B6B6B] hover:border-[#A9885A]/50"
+                      zone === z ? "border-[var(--laiton)] text-[var(--nuit)]" : "border-[#E3DCC9] text-[#6B6B6B] hover:border-[var(--laiton)]/50"
                     }`}
                   >
                     {z}
-                    {zonesEtendues.includes(z) && <span className="text-[#A9885A] ml-2 text-xs">+50 MAD</span>}
+                    {zonesEtendues.includes(z) && <span className="text-[var(--laiton)] ml-2 text-xs">+50 MAD</span>}
                   </button>
                 ))}
               </div>
@@ -508,8 +508,8 @@ export default function ReserverPage() {
 
           {/* ── Récapitulatif ── */}
           <aside className="lg:sticky lg:top-28 self-start">
-            <div className="bg-[#11241B] p-8">
-              <p className="sep text-[#A9885A]/60 text-xs mb-6" style={{ letterSpacing: "0.3em" }}>
+            <div className="bg-[var(--nuit)] p-8">
+              <p className="sep text-[var(--laiton)]/60 text-xs mb-6" style={{ letterSpacing: "0.3em" }}>
                 RÉCAPITULATIF
               </p>
               <dl className="flex flex-col gap-3 text-sm">
@@ -522,7 +522,7 @@ export default function ReserverPage() {
                 <div className="flex justify-between gap-4">
                   <dt className="text-white/40">Grade</dt>
                   <dd className="text-white text-right">
-                    {grade.label} <span className="text-[#A9885A]">({grade.roman})</span>
+                    {grade.label} <span className="text-[var(--laiton)]">({grade.roman})</span>
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">
@@ -540,7 +540,7 @@ export default function ReserverPage() {
               <div className="border-t border-white/10 mt-6 pt-6">
                 <div className="flex justify-between items-baseline">
                   <span className="text-white/40 text-sm">Prix total TTC</span>
-                  <span className="text-[#A9885A]" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "34px", fontWeight: 400 }}>
+                  <span className="text-[var(--laiton)]" style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "34px", fontWeight: 400 }}>
                     {prix ? `${prix.total} MAD` : "—"}
                   </span>
                 </div>
@@ -559,7 +559,7 @@ export default function ReserverPage() {
                 onClick={envoyer}
                 className={`w-full text-xs tracking-[0.2em] py-4 mt-8 transition-colors duration-300 ${
                   valide && statut !== "envoi"
-                    ? "bg-[#A9885A] text-[#11241B] hover:bg-white cursor-pointer"
+                    ? "bg-[var(--laiton)] text-[var(--nuit)] hover:bg-white cursor-pointer"
                     : "bg-white/10 text-white/30 cursor-not-allowed"
                 }`}
               >
@@ -585,6 +585,35 @@ export default function ReserverPage() {
           </aside>
         </div>
       </section>
+
+      {/* Barre prix + CTA sticky — mobile uniquement (le récap complet reste plus haut) */}
+      {prestationsSel.length > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--laiton)]/30 bg-[var(--nuit)]/95 px-5 py-3 backdrop-blur-md lg:hidden">
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-white/40">Total TTC</span>
+              <span
+                className="text-[var(--laiton)]"
+                style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "24px", fontWeight: 400, lineHeight: 1 }}
+              >
+                {prix ? `${prix.total} MAD` : "—"}
+              </span>
+            </div>
+            <button
+              type="button"
+              disabled={!valide || statut === "envoi"}
+              onClick={envoyer}
+              className={`px-6 py-3.5 text-xs tracking-[0.16em] transition-colors duration-300 ${
+                valide && statut !== "envoi"
+                  ? "bg-[var(--laiton)] text-[var(--nuit)]"
+                  : "bg-white/10 text-white/30"
+              }`}
+            >
+              {statut === "envoi" ? "ENVOI..." : compteRequis ? "CRÉER MON COMPTE" : "RÉSERVER"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

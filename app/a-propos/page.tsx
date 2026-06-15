@@ -4,10 +4,10 @@ export default function AProposPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="min-h-[56vh] md:min-h-[70vh] bg-[#11241B] flex items-end pb-20 md:pb-24 px-6 pt-36">
+      <section className="min-h-[56vh] md:min-h-[70vh] bg-[var(--nuit)] flex items-end pb-20 md:pb-24 px-6 pt-36">
         <div className="max-w-7xl mx-auto w-full">
           <div className="max-w-3xl">
-            <p className="sep text-[#A9885A]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
+            <p className="sep text-[var(--laiton)]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
               À PROPOS
             </p>
             <h1
@@ -20,17 +20,17 @@ export default function AProposPage() {
             >
               Une vision.
               <br />
-              <em style={{ fontStyle: "italic", color: "#A9885A" }}>Une mission.</em>
+              <em style={{ fontStyle: "italic", color: "var(--laiton)" }}>Une mission.</em>
             </h1>
           </div>
         </div>
       </section>
 
       {/* Histoire */}
-      <section className="bg-[#F2EDE3] py-28 px-6">
+      <section className="bg-[var(--ivoire)] py-28 px-6 border-t-2 border-[var(--laiton)]/25">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
           <div>
-            <p className="sep text-[#A9885A] text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
+            <p className="sep text-[var(--laiton)] text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
               LA GENÈSE
             </p>
             <h2
@@ -57,7 +57,7 @@ export default function AProposPage() {
           </div>
 
           <div className="flex flex-col gap-8">
-            <div className="bg-[#11241B] p-10">
+            <div className="bg-[var(--nuit)] p-10">
               <p
                 className="text-white/80 leading-relaxed"
                 style={{
@@ -69,8 +69,8 @@ export default function AProposPage() {
               >
                 &ldquo;Nous croyons que chaque personne mérite un service de qualité — chez elle, à l&apos;heure qui lui convient, avec le professionnel qu&apos;elle a choisi.&rdquo;
               </p>
-              <div className="w-8 h-px bg-[#A9885A] mt-8" />
-              <p className="text-[#A9885A] text-xs tracking-widest mt-3" style={{ letterSpacing: "0.2em" }}>
+              <div className="w-8 h-px bg-[var(--laiton)] mt-8" />
+              <p className="text-[var(--laiton)] text-xs tracking-widest mt-3" style={{ letterSpacing: "0.2em" }}>
                 FONDATEUR, WAL PRIVATE
               </p>
             </div>
@@ -103,7 +103,7 @@ export default function AProposPage() {
       <section className="bg-white py-28 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <p className="sep text-[#A9885A] text-xs mb-6" style={{ letterSpacing: "0.3em" }}>
+            <p className="sep text-[var(--laiton)] text-xs mb-6" style={{ letterSpacing: "0.3em" }}>
               NOS VALEURS
             </p>
             <h2
@@ -125,7 +125,7 @@ export default function AProposPage() {
               { title: "Inclusion", desc: "Du budget accessible au luxe absolu — WAL Private accueille tous les profils, des deux côtés de la plateforme." },
             ].map((val) => (
               <div key={val.title} className="bg-white p-10 flex flex-col gap-5">
-                <div className="w-8 h-px bg-[#A9885A]" />
+                <div className="w-8 h-px bg-[var(--laiton)]" />
                 <h3
                   style={{
                     fontFamily: "var(--font-cormorant), Georgia, serif",
@@ -143,9 +143,9 @@ export default function AProposPage() {
       </section>
 
       {/* Vision future */}
-      <section className="bg-[#11241B] py-24 px-6">
+      <section className="bg-[var(--nuit)] py-24 px-6">
         <div className="max-w-4xl mx-auto text-center flex flex-col items-center gap-8">
-          <p className="sep text-[#A9885A]/60 text-xs" style={{ letterSpacing: "0.3em" }}>
+          <p className="sep text-[var(--laiton)]/60 text-xs" style={{ letterSpacing: "0.3em" }}>
             LA VISION
           </p>
           <h2
@@ -158,14 +158,14 @@ export default function AProposPage() {
           >
             Marrakech n&apos;est que
             <br />
-            <em style={{ fontStyle: "italic", color: "#A9885A" }}>le début.</em>
+            <em style={{ fontStyle: "italic", color: "var(--laiton)" }}>le début.</em>
           </h2>
           <p className="text-white/40 text-sm leading-relaxed max-w-lg">
             Notre ambition est de faire de WAL Private la référence du service beauté à domicile au Maroc, puis dans le monde arabe et au-delà. Coiffure aujourd&apos;hui. Bien-être, massage, coaching image demain.
           </p>
           <Link
             href="/contact"
-            className="mt-4 px-8 py-4 border border-[#A9885A]/40 text-[#A9885A] text-xs tracking-[0.2em] hover:bg-[#A9885A] hover:text-[#11241B] transition-colors duration-300"
+            className="mt-4 px-8 py-4 border border-[var(--laiton)]/40 text-[var(--laiton)] text-xs tracking-[0.2em] hover:bg-[var(--laiton)] hover:text-[var(--nuit)] transition-colors duration-300"
           >
             NOUS CONTACTER
           </Link>
