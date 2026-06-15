@@ -4,7 +4,7 @@ export default function AProposPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="min-h-[70vh] bg-[#11241B] flex items-end pb-24 px-6 pt-36">
+      <section className="min-h-[56vh] md:min-h-[70vh] bg-[#11241B] flex items-end pb-20 md:pb-24 px-6 pt-36">
         <div className="max-w-7xl mx-auto w-full">
           <div className="max-w-3xl">
             <p className="sep text-[#A9885A]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
