@@ -168,6 +168,33 @@ body {
   .wal-live-dot { animation: none; }
 }
 
+/* ── Reveal au scroll (remplace framer-motion) ──
+   Enveloppe rendue côté serveur ; .is-visible posée par l'îlot client. */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+.reveal[data-dir="down"]  { transform: translateY(-40px); }
+.reveal[data-dir="left"]  { transform: translateX(40px); }
+.reveal[data-dir="right"] { transform: translateX(-40px); }
+.reveal[data-dir="none"]  { transform: none; }
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ── Legacy fade animations (kept for compatibility) ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(28px); }

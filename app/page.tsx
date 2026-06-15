@@ -1,7 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { FadeIn } from "@/components/motion/FadeIn";
+import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Marquee } from "@/components/ui/Marquee";
 import { GradeTabs, type Grade } from "@/components/ui/GradeTabs";
@@ -93,22 +91,22 @@ export default function Home() {
 
         <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-center gap-14 md:grid-cols-2">
           <div>
-            <FadeIn>
+            <Reveal>
               <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">Marrakech</p>
-            </FadeIn>
-            <FadeIn delay={0.1}>
+            </Reveal>
+            <Reveal delay={0.1}>
               <h1 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(42px,6.5vw,76px)", lineHeight: 1.06 }}>
                 Votre coiffeur privé,
                 <br />
                 <em className="italic text-[var(--laiton)]">chez vous.</em>
               </h1>
-            </FadeIn>
-            <FadeIn delay={0.2}>
+            </Reveal>
+            <Reveal delay={0.2}>
               <p className="mt-5 max-w-md text-[16.5px] leading-relaxed text-[var(--ivoire)]/75">
                 Professionnels vérifiés et classés, réservation instantanée, à l'heure et au lieu qui vous conviennent — villa, riad, hôtel.
               </p>
-            </FadeIn>
-            <FadeIn delay={0.3}>
+            </Reveal>
+            <Reveal delay={0.3}>
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <Button href="/reserver" variant="laiton">RÉSERVER MAINTENANT</Button>
                 <Link
@@ -118,11 +116,11 @@ export default function Home() {
                   MON COMPTE
                 </Link>
               </div>
-            </FadeIn>
+            </Reveal>
           </div>
 
           {/* panneau sceau + halo (là où était l'image) */}
-          <FadeIn delay={0.35} direction="left" className="relative hidden md:block">
+          <Reveal delay={0.35} direction="left" className="relative hidden md:block">
             <div className="relative aspect-[4/5] overflow-hidden border border-[var(--laiton)]/25 bg-[linear-gradient(160deg,#16301f_0%,#0d1d14_100%)]">
               <Halo placement="top-right" />
               <div className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center">
@@ -138,7 +136,7 @@ export default function Home() {
             <span className="absolute -bottom-4 -left-4 z-20 bg-[var(--laiton)] px-4 py-3 text-[11px] font-semibold tracking-[0.18em] text-[var(--nuit)]">
               RÉSERVATION OUVERTE
             </span>
-          </FadeIn>
+          </Reveal>
         </div>
       </header>
 
@@ -148,15 +146,15 @@ export default function Home() {
       {/* ── ÉTAPES ── */}
       <section className="px-8 py-24">
         <div className="mx-auto max-w-[1080px]">
-          <FadeIn>
+          <Reveal>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Comment ça marche</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
               Trois gestes. <em className="italic">Pas un de plus.</em>
             </h2>
-          </FadeIn>
+          </Reveal>
           <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
             {steps.map((s, i) => (
-              <FadeIn key={s.n} delay={0.1 + i * 0.1}>
+              <Reveal key={s.n} delay={0.1 + i * 0.1}>
                 <div className="group h-full border border-[var(--vert)]/14 bg-transparent p-8 transition-all duration-500 [transition-timing-function:var(--ease)] hover:-translate-y-1.5 hover:border-transparent hover:bg-white hover:shadow-[0_24px_50px_-28px_rgba(17,36,27,0.35)]">
                   <div className="mb-3.5 leading-none text-[var(--laiton-texte)] transition-transform duration-500 [transition-timing-function:var(--ease)] group-hover:translate-x-1.5" style={{ fontFamily: SerifTitle, fontSize: "42px" }}>
                     {s.n}
@@ -164,7 +162,7 @@ export default function Home() {
                   <h3 className="mb-1.5 text-[15.5px] font-semibold">{s.title}</h3>
                   <p className="text-[13.5px] text-[var(--vert)]/70">{s.desc}</p>
                 </div>
-              </FadeIn>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -173,33 +171,33 @@ export default function Home() {
       {/* ── GRADES ── */}
       <section className="bg-[var(--vert)] px-8 py-24 text-[var(--ivoire)]">
         <div className="mx-auto max-w-[1080px]">
-          <FadeIn>
+          <Reveal>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">Nos professionnels</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
               Un grade pour chaque <em className="italic text-[var(--laiton)]">niveau d'excellence.</em>
             </h2>
-          </FadeIn>
-          <FadeIn delay={0.15}>
+          </Reveal>
+          <Reveal delay={0.15}>
             <GradeTabs grades={grades} defaultIndex={1} />
-          </FadeIn>
-          <FadeIn delay={0.25}>
+          </Reveal>
+          <Reveal delay={0.25}>
             <div className="mt-12">
               <Button href="/reserver" variant="laiton">RÉSERVER UN COIFFEUR</Button>
             </div>
-          </FadeIn>
+          </Reveal>
         </div>
       </section>
 
       {/* ── LAST MINUTE (atout + levier compte) ── */}
       <section className="px-8 py-24">
         <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-center gap-14 md:grid-cols-2">
-          <FadeIn>
+          <Reveal>
             <div className="relative flex aspect-[4/5] items-center overflow-hidden border border-[var(--laiton)]/20 bg-[linear-gradient(160deg,var(--nuit)_0%,#0d1d14_100%)] px-10">
               <Halo placement="right" />
               <CompteurEnLigne />
             </div>
-          </FadeIn>
-          <FadeIn delay={0.1}>
+          </Reveal>
+          <Reveal delay={0.1}>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Last Minute</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
               Un coiffeur, <em className="italic text-[var(--laiton-texte)]">maintenant.</em>
@@ -214,7 +212,7 @@ export default function Home() {
             <div className="mt-7">
               <Button href="/reserver" variant="vert">RÉSERVER EN LAST MINUTE</Button>
             </div>
-          </FadeIn>
+          </Reveal>
         </div>
       </section>
 
@@ -222,15 +220,15 @@ export default function Home() {
       <section className="relative overflow-hidden bg-[var(--nuit)] px-8 py-24 text-[var(--ivoire)]">
         <Halo placement="bottom-right" />
         <div className="relative z-10 mx-auto max-w-[1080px]">
-          <FadeIn>
+          <Reveal>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">L'expérience WAL</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
               Le soin qui se <em className="italic text-[var(--laiton)]">déplace.</em>
             </h2>
-          </FadeIn>
+          </Reveal>
           <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden border border-[var(--ivoire)]/10 md:grid-cols-3">
             {metier.map((m, i) => (
-              <FadeIn key={m.mot} delay={0.1 + i * 0.1} className="h-full">
+              <Reveal key={m.mot} delay={0.1 + i * 0.1} className="h-full">
                 <div className="h-full bg-[var(--ivoire)]/[0.02] px-9 py-12 outline outline-1 outline-[var(--ivoire)]/10">
                   <h3 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(30px,4vw,44px)", lineHeight: 1 }} className="text-[var(--ivoire)]">
                     {m.mot}
@@ -238,7 +236,7 @@ export default function Home() {
                   <span className="mt-5 block h-px w-10 bg-[var(--laiton)]/55" />
                   <p className="mt-5 text-[14px] leading-relaxed text-[var(--ivoire)]/60">{m.desc}</p>
                 </div>
-              </FadeIn>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -247,22 +245,22 @@ export default function Home() {
       {/* ── FAQ ── */}
       <section className="px-8 py-24">
         <div className="mx-auto max-w-[1080px]">
-          <FadeIn>
+          <Reveal>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Questions</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(28px,4vw,40px)", lineHeight: 1.12 }}>
               Tout ce qu'il faut savoir. <em className="italic">Quand vous voulez.</em>
             </h2>
-          </FadeIn>
-          <FadeIn delay={0.1}>
+          </Reveal>
+          <Reveal delay={0.1}>
             <Accordion items={faq} className="mt-6" />
-          </FadeIn>
+          </Reveal>
         </div>
       </section>
 
       {/* ── CÔTÉ COIFFEUR (recrutement, visible sans polluer le client) ── */}
       <section className="px-8 py-20">
         <div className="mx-auto max-w-[1080px]">
-          <FadeIn>
+          <Reveal>
             <div className="grid grid-cols-1 items-center gap-10 border border-[var(--laiton)]/30 bg-[var(--vert)]/[0.03] p-10 md:grid-cols-[1.25fr_1fr] md:p-14">
               <div>
                 <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Côté coiffeur</p>
@@ -285,14 +283,14 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-          </FadeIn>
+          </Reveal>
         </div>
       </section>
 
       {/* ── CTA FINALE ── */}
       <section className="relative overflow-hidden bg-[var(--nuit)] px-8 py-28 text-center text-[var(--ivoire)]">
         <div className="mx-auto max-w-[1080px]">
-          <FadeIn>
+          <Reveal>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">Rejoindre le cercle</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(30px,4.5vw,46px)", lineHeight: 1.1 }}>
               Votre prochaine <em className="italic text-[var(--laiton)]">prestation,</em> chez vous.
@@ -301,7 +299,7 @@ export default function Home() {
               <Button href="/reserver" variant="laiton">RÉSERVER MAINTENANT</Button>
               <Button href="/compte" variant="outline">MON COMPTE</Button>
             </div>
-          </FadeIn>
+          </Reveal>
         </div>
       </section>
     </div>
