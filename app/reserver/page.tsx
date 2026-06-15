@@ -117,8 +117,6 @@ export default function ReserverPage() {
     prestationsSel.length > 0 &&
     zone !== null &&
     prenom.trim() !== "" &&
-    whatsapp.trim() !== "" &&
-    indicatifFinal !== "" &&
     (lastMinute || (date !== "" && creneau !== null));
 
   const quandTexte = lastMinute
@@ -173,7 +171,7 @@ export default function ReserverPage() {
     if (supabase) {
       const { error } = await supabase.from("reservations").insert({
         client_prenom: prenom.trim(),
-        client_whatsapp: whatsappComplet,
+        client_whatsapp: whatsapp.trim() ? whatsappComplet : null,
         prestation: prestationsSel.map((p) => p.id).join(","),
         prestation_label: prestationsSel.map((p) => p.label).join(" + "),
         grade: grade.id,
@@ -196,7 +194,7 @@ export default function ReserverPage() {
       `Zone : ${zone}${zoneEtendue ? " (zone étendue +50 MAD)" : ""}`,
       `Prix estimé : ${prix.total} MAD${dimanche ? " (majoration dimanche +20 %)" : ""}`,
       `Prénom : ${prenom.trim()}`,
-      `WhatsApp : ${whatsappComplet}`,
+      whatsapp.trim() ? `WhatsApp : ${whatsappComplet}` : null,
       notes.trim() ? `Notes : ${notes.trim()}` : null,
     ].filter(Boolean);
     window.open(`https://wa.me/${WAL_WHATSAPP}?text=${encodeURIComponent(lignes.join("\n"))}`, "_blank");
@@ -457,7 +455,7 @@ export default function ReserverPage() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className={labelCls} style={{ letterSpacing: "0.15em" }}>
-                    WHATSAPP
+                    WHATSAPP (OPTIONNEL)
                   </label>
                   <div className="flex gap-2">
                     <select
@@ -488,7 +486,7 @@ export default function ReserverPage() {
                       className={`${inputCls} flex-1`}
                     />
                   </div>
-                  <p className="text-[11px] text-[#6B6B6B]">Tout pays accepté — pour les résidents comme pour les vacanciers.</p>
+                  <p className="text-[11px] text-[#6B6B6B]">Facultatif — vous échangez avec votre coiffeur via la messagerie privée de votre compte. À ajouter seulement si vous préférez être joint sur WhatsApp.</p>
                 </div>
               </div>
               <div className="flex flex-col gap-2 mt-5">
