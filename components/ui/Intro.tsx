@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 
 const SEEN_KEY = "wal_intro_seen";
-/** Doit couvrir la fin de l'animation CSS (portes ouvertes à ~2,3 s). */
-const DURATION = 2300;
+/** Doit couvrir la fin de l'animation CSS (portes ouvertes à ~3,4 s). */
+const DURATION = 3500;
 
 /**
  * Écran d'intro « ouverture des portes » — première arrivée sur le site.
