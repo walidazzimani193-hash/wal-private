@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Intro } from "@/components/ui/Intro";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -31,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${cormorant.variable} ${manrope.variable}`}>
       <body className="min-h-screen flex flex-col" style={{ fontFamily: "var(--font-manrope), system-ui, sans-serif" }}>
+        <Intro />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
