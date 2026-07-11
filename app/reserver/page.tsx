@@ -203,7 +203,7 @@ export default function ReserverPage() {
   };
 
   const inputCls =
-    "bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[var(--laiton)] transition-colors";
+    "bg-white border border-[#E3DCC9] px-4 py-3.5 text-sm outline-none focus:border-[var(--laiton)] focus:shadow-[0_0_0_1px_var(--laiton)] transition-[border-color,box-shadow]";
   const labelCls = "text-xs tracking-widest text-[#6B6B6B]";
 
   // Écran de confirmation
@@ -264,7 +264,7 @@ export default function ReserverPage() {
           {/* ── Formulaire ── */}
           <div className="flex flex-col gap-10 sm:gap-14">
             {/* 1. Prestation */}
-            <div>
+            <div className="wal-coins p-6 sm:p-8">
               <SectionTitle n="01" title="Choisissez vos prestations" />
               <p className="text-xs text-[#6B6B6B] -mt-3 mb-6">
                 Vous pouvez en sélectionner plusieurs — par exemple pour vous et un proche, en un seul rendez-vous.
@@ -314,7 +314,7 @@ export default function ReserverPage() {
             </div>
 
             {/* 2. Grade */}
-            <div>
+            <div className="wal-coins p-6 sm:p-8">
               <SectionTitle n="02" title="Sélectionnez le grade" />
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {grades.map((g) => {
@@ -346,7 +346,7 @@ export default function ReserverPage() {
             </div>
 
             {/* 3. Date & créneau */}
-            <div>
+            <div className="wal-coins p-6 sm:p-8">
               <SectionTitle n="03" title="Quand ?" />
               <button
                 type="button"
@@ -425,7 +425,7 @@ export default function ReserverPage() {
             </div>
 
             {/* 4. Zone */}
-            <div>
+            <div className="wal-coins p-6 sm:p-8">
               <SectionTitle n="04" title="Votre quartier" />
               <div className="flex flex-wrap gap-2">
                 {[...zonesCentre, ...zonesEtendues].map((z) => (
@@ -448,7 +448,7 @@ export default function ReserverPage() {
             </div>
 
             {/* 5. Contact */}
-            <div>
+            <div className="wal-coins p-6 sm:p-8">
               <SectionTitle n="05" title="Vos coordonnées" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-2">
