@@ -168,11 +168,14 @@ export default function Home() {
               Trois gestes. <em className="italic">Pas un de plus.</em>
             </h2>
           </Reveal>
+          <Reveal delay={0.05} className="mt-10">
+            <div className="wal-trace w-full" />
+          </Reveal>
           <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
             {steps.map((s, i) => (
               <Reveal key={s.n} delay={0.1 + i * 0.1}>
                 <div className="group h-full border border-[var(--vert)]/14 bg-transparent p-8 transition-all duration-500 [transition-timing-function:var(--ease)] hover:-translate-y-1.5 hover:border-transparent hover:bg-white hover:shadow-[0_24px_50px_-28px_rgba(17,36,27,0.35)]">
-                  <div className="mb-3.5 leading-none text-[var(--laiton-texte)] transition-transform duration-500 [transition-timing-function:var(--ease)] group-hover:translate-x-1.5" style={{ fontFamily: SerifTitle, fontSize: "42px" }}>
+                  <div className="mb-3.5 leading-none text-[var(--laiton-texte)] transition-transform duration-500 [transition-timing-function:var(--ease)] group-hover:translate-x-1.5" style={{ fontFamily: SerifTitle, fontSize: "56px", fontWeight: 500 }}>
                     {s.n}
                   </div>
                   <h3 className="mb-1.5 text-[15.5px] font-semibold">{s.title}</h3>

@@ -89,11 +89,11 @@ export function GradeTabs({ grades, defaultIndex = 1 }: GradeTabsProps) {
       </div>
 
       {/* Panneau actif */}
-      <div className="relative mt-[34px] min-h-[150px]">
+      <div className="wal-frame grade-card relative mt-[34px] min-h-[190px] bg-[var(--nuit)]/35 px-8 py-9 md:px-10 max-[680px]:min-h-[300px]">
         {grades.map((g, i) => (
           <div
             key={g.roman}
-            className={`absolute inset-0 flex items-baseline gap-[50px] max-[680px]:flex-col max-[680px]:gap-3.5 transition-[opacity,transform] duration-[550ms] [transition-timing-function:var(--ease)] ${
+            className={`absolute inset-x-8 inset-y-9 flex items-baseline gap-[50px] md:inset-x-10 max-[680px]:flex-col max-[680px]:gap-3.5 transition-[opacity,transform] duration-[550ms] [transition-timing-function:var(--ease)] ${
               i === active
                 ? "opacity-100 translate-y-0"
                 : "pointer-events-none translate-y-3.5 opacity-0"
