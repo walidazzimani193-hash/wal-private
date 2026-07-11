@@ -14,6 +14,7 @@ import {
   calculerPrix,
 } from "@/lib/catalogue";
 import { getSupabase } from "@/lib/supabase";
+import { Couture } from "@/components/ui/Ornements";
 
 // Numéro WhatsApp WAL (repli si la plateforme n'est pas encore configurée)
 const WAL_WHATSAPP = "32496974983";
@@ -231,8 +232,9 @@ export default function ReserverPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="bg-[var(--nuit)] pt-36 pb-16 px-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative overflow-hidden bg-[var(--nuit)] pt-36 pb-16 px-6">
+        <span className="wal-khatam" />
+        <div className="relative z-10 max-w-7xl mx-auto">
           <p className="sep text-[var(--laiton)]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
             RÉSERVATION
           </p>
@@ -255,7 +257,9 @@ export default function ReserverPage() {
         </div>
       </section>
 
-      <section className="bg-[var(--ivoire)] pt-16 pb-28 lg:pb-16 px-6 border-t-2 border-[var(--laiton)]/25">
+      <Couture />
+
+      <section className="bg-[var(--ivoire)] pt-16 pb-28 lg:pb-16 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12">
           {/* ── Formulaire ── */}
           <div className="flex flex-col gap-10 sm:gap-14">

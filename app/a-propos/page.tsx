@@ -1,11 +1,13 @@
 import Link from "next/link";
+import { Couture } from "@/components/ui/Ornements";
 
 export default function AProposPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="min-h-[56vh] md:min-h-[70vh] bg-[var(--nuit)] flex items-end pb-20 md:pb-24 px-6 pt-36">
-        <div className="max-w-7xl mx-auto w-full">
+      <section className="relative min-h-[56vh] md:min-h-[70vh] overflow-hidden bg-[var(--nuit)] flex items-end pb-20 md:pb-24 px-6 pt-36">
+        <span className="wal-khatam" />
+        <div className="relative z-10 max-w-7xl mx-auto w-full">
           <div className="max-w-3xl">
             <p className="sep text-[var(--laiton)]/60 text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
               À PROPOS
@@ -26,8 +28,10 @@ export default function AProposPage() {
         </div>
       </section>
 
+      <Couture />
+
       {/* Histoire */}
-      <section className="bg-[var(--ivoire)] py-28 px-6 border-t-2 border-[var(--laiton)]/25">
+      <section className="bg-[var(--ivoire)] py-28 px-6">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
           <div>
             <p className="sep text-[var(--laiton)] text-xs mb-8" style={{ letterSpacing: "0.3em" }}>
