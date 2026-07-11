@@ -187,6 +187,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Couture />
+
       {/* ── GRADES ── */}
       <section className="bg-[var(--vert)] px-8 py-24 text-[var(--ivoire)]">
         <div className="mx-auto max-w-[1080px]">
@@ -207,11 +209,14 @@ export default function Home() {
         </div>
       </section>
 
+      <Couture />
+
       {/* ── LAST MINUTE (atout + levier compte) ── */}
       <section className="px-8 py-24">
         <div className="mx-auto grid max-w-[1080px] grid-cols-1 items-center gap-14 md:grid-cols-2">
           <Reveal>
-            <div className="relative flex aspect-[4/5] items-center overflow-hidden border border-[var(--laiton)]/20 bg-[linear-gradient(160deg,var(--nuit)_0%,#0d1d14_100%)] px-10">
+            <div className="wal-frame relative flex aspect-[4/5] items-center overflow-hidden bg-[linear-gradient(160deg,var(--nuit)_0%,#0d1d14_100%)] px-10">
+              <span className="wal-khatam" />
               <Halo placement="right" />
               <CompteurEnLigne />
             </div>
@@ -235,8 +240,11 @@ export default function Home() {
         </div>
       </section>
 
+      <Couture />
+
       {/* ── EXPÉRIENCE (triptyque typographique + halo) ── */}
       <section className="relative overflow-hidden bg-[var(--nuit)] px-8 py-24 text-[var(--ivoire)]">
+        <span className="wal-khatam" />
         <Halo placement="bottom-right" />
         <div className="relative z-10 mx-auto max-w-[1080px]">
           <Reveal>
@@ -280,7 +288,7 @@ export default function Home() {
       <section className="px-8 py-20">
         <div className="mx-auto max-w-[1080px]">
           <Reveal>
-            <div className="grid grid-cols-1 items-center gap-10 border border-[var(--laiton)]/30 bg-[var(--vert)]/[0.03] p-10 md:grid-cols-[1.25fr_1fr] md:p-14">
+            <div className="wal-coins grid grid-cols-1 items-center gap-10 border border-[var(--laiton)]/30 bg-[var(--vert)]/[0.03] p-10 md:grid-cols-[1.25fr_1fr] md:p-14">
               <div>
                 <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton-texte)]">Côté coiffeur</p>
                 <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(26px,3.5vw,38px)", lineHeight: 1.12 }}>
@@ -296,7 +304,7 @@ export default function Home() {
                 <Button href="/coiffeurs" variant="vert">DEVENIR COIFFEUR WAL</Button>
                 <Link
                   href="/pro"
-                  className="border-b border-[var(--vert)]/25 pb-0.5 text-[12px] tracking-[0.1em] text-[var(--vert)]/60 transition-colors duration-300 hover:border-[var(--laiton-texte)] hover:text-[var(--vert)]"
+                  className="wal-link pb-0.5 text-[12px] tracking-[0.1em] text-[var(--vert)]/60 transition-colors duration-300 hover:text-[var(--vert)]"
                 >
                   J'ai déjà un compte — me connecter
                 </Link>
@@ -306,9 +314,12 @@ export default function Home() {
         </div>
       </section>
 
+      <Couture />
+
       {/* ── CTA FINALE ── */}
       <section className="relative overflow-hidden bg-[var(--nuit)] px-8 py-28 text-center text-[var(--ivoire)]">
-        <div className="mx-auto max-w-[1080px]">
+        <span className="wal-khatam" />
+        <div className="relative z-10 mx-auto max-w-[1080px]">
           <Reveal>
             <p className="mb-4 text-[11px] uppercase tracking-[0.3em] text-[var(--laiton)]">Rejoindre le cercle</p>
             <h2 style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(30px,4.5vw,46px)", lineHeight: 1.1 }}>
