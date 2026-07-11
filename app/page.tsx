@@ -6,6 +6,7 @@ import { GradeTabs, type Grade } from "@/components/ui/GradeTabs";
 import { Accordion, type AccordionItem } from "@/components/ui/Accordion";
 import { Halo } from "@/components/ui/Halo";
 import { CompteurEnLigne } from "@/components/ui/CompteurEnLigne";
+import { Couture, Sceau } from "@/components/ui/Ornements";
 
 const grades: Grade[] = [
   { roman: "I", label: "Novice", min: 150, max: 300, desc: "Jeunes talents certifiés, accompagnés par un mentor WAL. Le bon geste, au tarif le plus accessible du cercle." },
@@ -111,7 +112,7 @@ export default function Home() {
                 <Button href="/reserver" variant="laiton">RÉSERVER MAINTENANT</Button>
                 <Link
                   href="/compte"
-                  className="border-b border-[var(--ivoire)]/25 pb-0.5 text-[12px] tracking-[0.1em] text-[var(--ivoire)]/60 transition-colors duration-300 hover:border-[var(--laiton)] hover:text-[var(--ivoire)]"
+                  className="wal-link pb-0.5 text-[12px] tracking-[0.1em] text-[var(--ivoire)]/60 transition-colors duration-300 hover:text-[var(--ivoire)]"
                 >
                   MON COMPTE
                 </Link>
@@ -135,13 +136,12 @@ export default function Home() {
 
           {/* panneau sceau + halo (là où était l'image) */}
           <Reveal delay={0.35} direction="left" className="relative hidden md:block">
-            <div className="relative aspect-[4/5] overflow-hidden border border-[var(--laiton)]/25 bg-[linear-gradient(160deg,#16301f_0%,#0d1d14_100%)]">
+            <div className="wal-frame relative aspect-[4/5] overflow-hidden bg-[linear-gradient(160deg,#16301f_0%,#0d1d14_100%)]">
+              <span className="wal-khatam" />
               <Halo placement="top-right" />
               <div className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center">
-                <span style={{ fontFamily: SerifTitle, fontWeight: 500, fontSize: "clamp(96px,11vw,140px)" }} className="leading-none text-[var(--ivoire)]/90">
-                  W
-                </span>
-                <span className="mt-5 block h-px w-12 bg-[var(--laiton)]/50" />
+                <Sceau size={250} />
+                <span className="mt-7 block h-px w-12 bg-[var(--laiton)]/50" />
                 <p className="mt-5 text-[11px] uppercase tracking-[0.32em] text-[var(--ivoire)]/55">
                   Cercle privé · Marrakech
                 </p>
@@ -154,8 +154,10 @@ export default function Home() {
         </div>
       </header>
 
+      <Couture />
+
       {/* ── MARQUEE ── */}
-      <Marquee items={marqueeItems} />
+      <Marquee items={marqueeItems} duration={38} />
 
       {/* ── ÉTAPES ── */}
       <section className="px-8 py-24">

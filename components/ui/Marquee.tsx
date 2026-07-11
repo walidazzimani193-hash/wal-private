@@ -30,7 +30,7 @@ export function Marquee({ items, duration = 28, className = "" }: MarqueeProps) 
                 key={`${dup}-${i}`}
                 className="inline-flex items-center gap-3.5 text-[12.5px] tracking-[0.14em]"
               >
-                <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-[var(--laiton)]" />
+                <span className="h-[6px] w-[6px] shrink-0 rotate-45 border border-[var(--laiton)]/70 bg-transparent" />
                 {item}
               </span>
             ))}
