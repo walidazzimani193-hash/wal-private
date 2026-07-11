@@ -23,9 +23,14 @@ export function Reveal({ children, delay = 0, direction = "up", className }: Rev
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Déjà passé au-dessus du viewport (scroll rapide, ancre) : révéler direct.
+    if (el.getBoundingClientRect().bottom < 0) {
+      setVisible(true);
+      return;
+    }
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting || entry.boundingClientRect.bottom < 0) {
           setVisible(true);
           io.disconnect();
         }
